@@ -1,0 +1,87 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}poisson.h\PYGZdq{}}
+
+\PYG{k}{struct} \PYG{n}{Viscosity} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//此处构建Viscosity结构在下文中用于带入求解结构中}
+  \PYG{k}{vector} \PYG{n}{u}\PYG{p}{;}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{mu}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{n}{rho}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{dt}\PYG{p}{;}
+  \PYG{k+kt}{int} \PYG{n}{nrelax}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{;}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{c+cp}{\PYGZsh{}if AXI}
+\PYG{c+cp}{\PYGZsh{} define lambda ((coord)\PYGZob{}1., 1. + dt/rho[]*(mu.x[] + mu.x[1] + \PYGZbs{}}
+\PYG{c+cp}{                         mu.y[] + mu.y[0,1])/2./sq(y)\PYGZcb{})}\PYG{c+c1}{//由轴对称方程得来的一项}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// not AXI}
+\PYG{c+cp}{\PYGZsh{} if dimension == 1}
+\PYG{c+cp}{\PYGZsh{}   define lambda ((coord)\PYGZob{}1.\PYGZcb{})}
+\PYG{c+cp}{\PYGZsh{} elif dimension == 2}
+\PYG{c+cp}{\PYGZsh{}   define lambda ((coord)\PYGZob{}1.,1.\PYGZcb{})}
+\PYG{c+cp}{\PYGZsh{} elif dimension == 3}
+\PYG{c+cp}{\PYGZsh{}   define lambda ((coord)\PYGZob{}1.,1.,1.\PYGZcb{})}
+\PYG{c+cp}{\PYGZsh{}endif}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{relax\PYGZus{}viscosity} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{b}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{l}\PYG{p}{,} \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{struct} \PYG{n}{Viscosity} \PYG{o}{*} \PYG{n}{p} \PYG{o}{=} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Viscosity} \PYG{o}{*}\PYG{p}{)} \PYG{n}{data}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{n}{face} \PYG{k}{vector} \PYG{n}{mu} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{mu}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{k}{scalar} \PYG{n}{rho} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{rho}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{dt} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{dt}\PYG{p}{;}
+  \PYG{k}{vector} \PYG{n}{u} \PYG{o}{=} \PYG{k}{vector}\PYG{p}{(}\PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]),} \PYG{n}{r} \PYG{o}{=} \PYG{k}{vector}\PYG{p}{(}\PYG{n}{b}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]);}\PYG{c+c1}{//r中存储的为$u^{***}$}
+
+\PYG{c+cp}{\PYGZsh{}if JACOBI}
+  \PYG{k}{vector} \PYG{n}{w}\PYG{p}{[];}
+\PYG{c+cp}{\PYGZsh{}else}
+  \PYG{k}{vector} \PYG{n}{w} \PYG{o}{=} \PYG{n}{u}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{n}{foreach\PYGZus{}level\PYGZus{}or\PYGZus{}leaf} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{w}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dt}\PYG{o}{/}\PYG{n}{rho}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{mu}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{*}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{mu}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{c+c1}{//具体离散格式的推导见上文}
+               \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 1}
+               \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{*}\PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+}
+                    \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{\PYGZhy{}}
+                    \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.}\PYG{p}{)}
+               \PYG{o}{\PYGZhy{}} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+}
+                     \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{\PYGZhy{}}
+                     \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.}\PYG{p}{)}
+               \PYG{c+cp}{\PYGZsh{}endif}
+               \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 2}
+               \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{*}\PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+}
+                      \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{\PYGZhy{}}
+                      \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.}\PYG{p}{)}
+               \PYG{o}{\PYGZhy{}} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+}
+                      \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{\PYGZhy{}}
+                      \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{4.}\PYG{p}{)}
+               \PYG{c+cp}{\PYGZsh{}endif}
+               \PYG{p}{)} \PYG{o}{+} \PYG{n}{r}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{sq}\PYG{p}{(}\PYG{n}{Delta}\PYG{p}{))}\PYG{o}{/}
+    \PYG{p}{(}\PYG{n}{sq}\PYG{p}{(}\PYG{n}{Delta}\PYG{p}{)}\PYG{o}{*}\PYG{n}{lambda}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{dt}\PYG{o}{/}\PYG{n}{rho}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{mu}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{mu}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}
+                                    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 1}
+                      \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]}
+                                    \PYG{c+cp}{\PYGZsh{}endif}
+                        \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 2}
+                      \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{mu}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[]}
+                        \PYG{c+cp}{\PYGZsh{}endif}
+                 \PYG{p}{));}
+  \PYG{p}{\PYGZcb{}}
+
+\PYG{c+cp}{\PYGZsh{}if JACOBI}
+  \PYG{n}{foreach\PYGZus{}level\PYGZus{}or\PYGZus{}leaf} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{w}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])}\PYG{o}{/}\PYG{l+m+mf}{3.}\PYG{p}{;}\PYG{c+c1}{//与poisson.h中的结构同理，如果选用该模式，则是更新后与更新前的数值进行参数平均处理，如果不使用则不保留更新前数值，直接取新的数值}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+\PYG{c+cp}{\PYGZsh{}if TRASH}
+  \PYG{k}{vector} \PYG{n}{u1}\PYG{p}{[];}
+  \PYG{n}{foreach\PYGZus{}level\PYGZus{}or\PYGZus{}leaf} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{u1}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+  \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{u}\PYG{p}{\PYGZcb{});}
+  \PYG{n}{foreach\PYGZus{}level\PYGZus{}or\PYGZus{}leaf} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{u1}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+\PYG{c+cp}{\PYGZsh{}endif}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

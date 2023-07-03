@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{mgstats} \PYG{n+nf}{viscosity} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Viscosity} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{vector} \PYG{n}{u} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{u}\PYG{p}{,} \PYG{n}{r}\PYG{p}{[];}
+  \PYG{n}{foreach}\PYG{p}{()}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{r}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{mu} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{mu}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{n}{rho} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{rho}\PYG{p}{;}
+  \PYG{n}{restriction} \PYG{p}{(\PYGZob{}}\PYG{n}{mu}\PYG{p}{,}\PYG{n}{rho}\PYG{p}{\PYGZcb{});}
+
+  \PYG{k}{return} \PYG{n}{mg\PYGZus{}solve} \PYG{p}{((}\PYG{k}{scalar} \PYG{o}{*}\PYG{p}{)\PYGZob{}}\PYG{n}{u}\PYG{p}{\PYGZcb{},} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*}\PYG{p}{)\PYGZob{}}\PYG{n}{r}\PYG{p}{\PYGZcb{},}
+           \PYG{n}{residual\PYGZus{}viscosity}\PYG{p}{,} \PYG{n}{relax\PYGZus{}viscosity}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{p}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{res}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

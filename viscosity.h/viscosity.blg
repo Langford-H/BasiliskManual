@@ -1,0 +1,9 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'viscosity.blg'
+[32] biber:322> INFO - === 一 7月  3, 2023, 14:59:44
+[39] Biber.pm:415> INFO - Reading 'viscosity.bcf'
+[66] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
+[68] Utils.pm:293> WARN - The file 'viscosity.bcf' does not contain any citations!
+[72] bbl.pm:652> INFO - Writing 'viscosity.bbl' with encoding 'UTF-8'
+[72] bbl.pm:755> INFO - Output to viscosity.bbl
+[72] Biber.pm:128> INFO - WARNINGS: 1
