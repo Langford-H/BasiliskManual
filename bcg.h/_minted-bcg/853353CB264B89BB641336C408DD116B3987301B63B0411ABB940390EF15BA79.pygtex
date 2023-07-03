@@ -1,0 +1,43 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/*本函数的目的在于采取上文中推导出的迎风格式计算$\mathbf{U}^{n+1/2}_i$，已知中心的速度场$f$保存在面中心的单元流量$uf$，源项$src$，计算时间步长$dt$，将最后的结果保存在每个单元表面中心上，指针为flux*/}
+\PYG{k+kt}{void} \PYG{n+nf}{tracer\PYGZus{}fluxes} \PYG{p}{(}
+    \PYG{k}{scalar} \PYG{n}{f}\PYG{p}{,}
+    \PYG{n}{face} \PYG{k}{vector} \PYG{n}{uf}\PYG{p}{,}
+    \PYG{n}{face} \PYG{k}{vector} \PYG{n}{flux}\PYG{p}{,}
+    \PYG{k+kt}{double} \PYG{n}{dt}\PYG{p}{,}
+    \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{k}{scalar} \PYG{n}{src}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+ \PYG{c+cm}{/*首先计算$\nabla f$，gradients()函数的目的是将第一个参数的梯度赋予第二个vector型函数中*/}
+  \PYG{k}{vector} \PYG{n}{g}\PYG{p}{[];}
+  \PYG{n}{gradients} \PYG{p}{(\PYGZob{}}\PYG{n}{f}\PYG{p}{\PYGZcb{},} \PYG{p}{\PYGZob{}}\PYG{n}{g}\PYG{p}{\PYGZcb{});}
+
+\PYG{c+cm}{/*接下来针对每一个面的中心计算$\Phi^{n+1/2}_d $，在这里我们将源项即压力项放置于src中并不进行单独计算*/}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+\PYG{c+cm}{/*首先是法相分量$ \Phi^n+\frac{\Delta}{2}min[1-\frac{\Delta t}{\Delta}u_i^{n},1]\frac{\partial \Phi^n}{\partial x_i}$*/}
+
+    \PYG{k+kt}{double} \PYG{n}{un} \PYG{o}{=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{/}\PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{Delta} \PYG{o}{+} \PYG{n}{SEPS}\PYG{p}{),} \PYG{n}{s} \PYG{o}{=} \PYG{n}{sign}\PYG{p}{(}\PYG{n}{un}\PYG{p}{);}
+    \PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{s} \PYG{o}{+} \PYG{l+m+mf}{1.}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+    \PYG{k+kt}{double} \PYG{n}{f2} \PYG{o}{=} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{p}{(}\PYG{n}{src}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{src}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{*}\PYG{n}{dt}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{+} \PYG{n}{s}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{\PYGZhy{}} \PYG{n}{s}\PYG{o}{*}\PYG{n}{un}\PYG{p}{)}\PYG{o}{*}\PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Delta}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+
+ \PYG{c+cm}{/*其次计算$- \frac{\Delta t}{2}u_j^{n}\frac{\partial \Phi^n}{\partial x_j}$当为2维情况时该项只有一项，3维为两项，计算需要使用迎风格式*/}
+
+    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 1}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{vn} \PYG{o}{=} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{uf}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]);}
+      \PYG{k+kt}{double} \PYG{n}{fyy} \PYG{o}{=} \PYG{n}{vn} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.} \PYG{o}{?} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{:} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{];}
+      \PYG{n}{f2} \PYG{o}{\PYGZhy{}=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{vn}\PYG{o}{*}\PYG{n}{fyy}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+cp}{\PYGZsh{}endif}
+    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 2}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{wn} \PYG{o}{=} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{uf}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]);}
+      \PYG{k+kt}{double} \PYG{n}{fzz} \PYG{o}{=} \PYG{n}{wn} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.} \PYG{o}{?} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{:} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{f}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{];}
+      \PYG{n}{f2} \PYG{o}{\PYGZhy{}=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{wn}\PYG{o}{*}\PYG{n}{fzz}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+cp}{\PYGZsh{}endif}
+
+    \PYG{n}{flux}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{f2}\PYG{o}{*}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{n}{boundary\PYGZus{}flux} \PYG{p}{(\PYGZob{}}\PYG{n}{flux}\PYG{p}{\PYGZcb{});}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

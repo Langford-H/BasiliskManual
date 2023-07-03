@@ -1,0 +1,116 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Height\PYGZhy{}function curvature and normal}
+
+
+\PYG{c+cm}{The normal is computed in a similar way, but also allowing for}
+\PYG{c+cm}{asymmetric 2\PYGZhy{}points stencils and taking into account the}
+\PYG{c+cm}{orientation. */}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}heights.h\PYGZdq{}}
+
+\PYG{c+cp}{\PYGZsh{}if dimension == 2}
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}\PYG{c+c1}{//foreach\PYGZus{}dimension为basilisk自定义的指令，在程序编译时该指令会将作用范围内所有的代码进行复制，并将表示下标的函数、参数进行遍历如“.x,.y”以及“\PYGZus{}x, \PYGZus{}y”，也就是说下文中的kappa\PYGZus{}y函数在实际的编译过程中被复制成为了两个函数（宏定义为二维环境）kappa\PYGZus{}x, 以及kappa\PYGZus{}y}
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n}{kappa\PYGZus{}y} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{int} \PYG{n}{ori} \PYG{o}{=} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]);}\PYG{c+c1}{//orientation 函数用来鉴定该网格高度的法方向}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{==} \PYG{n}{nodata} \PYG{o}{||} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])} \PYG{o}{!=} \PYG{n}{ori}\PYG{p}{)}\PYG{c+c1}{//如果在周围网格内有height为nodata或者相邻网格height方向不相符合的情况，就将该网格的曲率定义为nodata}
+      \PYG{k}{return} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{hx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{hxx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[])}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}
+  \PYG{k}{return} \PYG{n}{hxx}\PYG{o}{/}\PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hx}\PYG{p}{),} \PYG{l+m+mi}{3}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{);}\PYG{c+c1}{//直接做二阶精度的差分进行相关计算}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}\PYG{c+c1}{//basilisk中所有的坐标在只有单坐标时例如h.x[i]，其所对应的指标为x轴}
+\PYG{k}{static} \PYG{n}{coord} \PYG{n}{normal\PYGZus{}y} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{\PYGZcb{};}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+  \PYG{k+kt}{int} \PYG{n}{ori} \PYG{o}{=} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)}\PYG{c+c1}{//同样的确定相应网格的height值1.同方向 2.不是nodata}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+    \PYG{k}{else}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[];}\PYG{c+c1}{//边界处理，当h.y[1]不存在时取一阶精度}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{];}\PYG{c+c1}{//同理，取一阶精度}
+  \PYG{k}{else}
+    \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{nn} \PYG{o}{=} \PYG{p}{(}\PYG{n}{ori} \PYG{o}{?} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.} \PYG{o}{:} \PYG{l+m+mf}{1.}\PYG{p}{)}\PYG{o}{*}\PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{));}\PYG{c+c1}{//如此做法的原因就是因为高度函数在非沿界面方向上，相邻两个单元网格的height之差还就是1，详情见height.h}
+  \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{/=} \PYG{n}{nn}\PYG{p}{;}
+  \PYG{n}{n}\PYG{p}{.}\PYG{n}{y} \PYG{o}{=} \PYG{l+m+mf}{1.}\PYG{o}{/}\PYG{n}{nn}\PYG{p}{;}\PYG{c+c1}{//将法向量的两个分量进行单位化}
+  \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}\PYG{c+c1}{//同一个网格会由两个方向的高度函数拟合出两个相对应的法向量}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// dimension == 3}
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}\PYG{c+c1}{//三维情况下的曲率计算，同理该函数在实际编译时被复制成为3份，分别是kappa\PYGZus{}x，kappa\PYGZus{}y，kappa\PYGZus{}z}
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n}{kappa\PYGZus{}z} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{int} \PYG{n}{ori} \PYG{o}{=} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[]);}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{j}\PYG{o}{++}\PYG{p}{)}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{==} \PYG{n}{nodata} \PYG{o}{||} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{])} \PYG{o}{!=} \PYG{n}{ori}\PYG{p}{)}
+  \PYG{k}{return} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{hx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{hy} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We \PYGZdq{}filter\PYGZdq{} the curvature using a weighted sum of the three}
+\PYG{c+cm}{  second\PYGZhy{}derivatives in the $x$ and $y$ directions. This is necessary}
+\PYG{c+cm}{  to avoid a numerical mode when the curvature is used to compute}
+\PYG{c+cm}{  surface tension. */}
+
+  \PYG{k+kt}{double} \PYG{n}{filter} \PYG{o}{=} \PYG{l+m+mf}{0.2}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{hxx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{filter}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{+}
+    \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[])} \PYG{o}{+}
+    \PYG{n}{filter}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}\PYG{c+c1}{//在此处需要强调的是这里的z轴坐标全部都默认为当前位置，在该z坐标下进行一个平面上的高度函数二阶导数相关计算}
+    \PYG{p}{((}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{filter}\PYG{p}{)}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+  \PYG{k+kt}{double} \PYG{n}{hyy} \PYG{o}{=} \PYG{p}{(}\PYG{n}{filter}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{+}
+    \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[])} \PYG{o}{+}
+    \PYG{n}{filter}\PYG{o}{*}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}\PYG{o}{/}
+    \PYG{p}{((}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{filter}\PYG{p}{)}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+  \PYG{k+kt}{double} \PYG{n}{hxy} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{4.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+  \PYG{k}{return} \PYG{p}{(}\PYG{n}{hxx}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hy}\PYG{p}{))} \PYG{o}{+} \PYG{n}{hyy}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hx}\PYG{p}{))} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{hxy}\PYG{o}{*}\PYG{n}{hx}\PYG{o}{*}\PYG{n}{hy}\PYG{p}{)}\PYG{o}{/}
+    \PYG{n}{pow}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hx}\PYG{p}{)} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hy}\PYG{p}{),} \PYG{l+m+mi}{3}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}\PYG{c+c1}{//foreach\PYGZus{}dimension的具体操作其实质上就是转换坐标，在保持右手坐标系的前提下遍历每个方向上的坐标可能性}
+
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+\PYG{k}{static} \PYG{n}{coord} \PYG{n}{normal2\PYGZus{}z} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{hz} \PYG{o}{=} \PYG{n}{h}\PYG{p}{.}\PYG{n}{z}\PYG{p}{;}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{hz}\PYG{p}{[]} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{(}\PYG{n}{coord}\PYG{p}{)\PYGZob{}}\PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{\PYGZcb{};}
+  \PYG{k+kt}{int} \PYG{n}{ori} \PYG{o}{=} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[]);}
+  \PYG{k+kt}{double} \PYG{n}{a} \PYG{o}{=} \PYG{n}{ori} \PYG{o}{?} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.} \PYG{o}{:} \PYG{l+m+mf}{1.}\PYG{p}{;}
+  \PYG{n}{coord} \PYG{n}{n}\PYG{p}{;}
+  \PYG{n}{n}\PYG{p}{.}\PYG{n}{z} \PYG{o}{=} \PYG{n}{a}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//在此处foreach\PYGZus{}dimension后跟2代表在x方向和y方向上进行循环遍历，请注意，此时函数方向为“\PYGZus{}z”在进入别的方向判定时，该循环就是在相应坐标下的x,y方向循环了}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{allocated}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{hz}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//allocate函数具体操作内容未知}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{allocated}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)}
+        \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{a}\PYG{o}{*}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+      \PYG{k}{else}
+        \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{a}\PYG{o}{*}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{hz}\PYG{p}{[]);}\PYG{c+c1}{//进入该循环说明在某一方向上height函数无法取值，此时取一阶精度}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{allocated}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{nodata} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{==} \PYG{n}{ori}\PYG{p}{)}\PYG{c+c1}{//与上同理}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{a}\PYG{o}{*}\PYG{p}{(}\PYG{n}{hz}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{hz}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]);}
+    \PYG{k}{else}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+\PYG{k}{static} \PYG{n}{coord} \PYG{n}{normal\PYGZus{}z} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{n}{normal2\PYGZus{}z} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}\PYG{c+c1}{//调用之前定义的函数，其中z方向的值应该为1}
+  \PYG{k+kt}{double} \PYG{n}{nn} \PYG{o}{=} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{)} \PYG{o}{+} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{+} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{nn} \PYG{o}{\PYGZlt{}} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{/=} \PYG{n}{nn}\PYG{p}{;}\PYG{c+c1}{//将相应的法向量单位化}
+    \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{return} \PYG{p}{(}\PYG{n}{coord}\PYG{p}{)\PYGZob{}}\PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{\PYGZcb{};}\PYG{c+c1}{//如果相应的值中有nodata的存在返回nodata向量}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif}
+\end{Verbatim}

@@ -1,0 +1,17 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'bcg.blg'
+[30] biber:322> INFO - === 一 7月  3, 2023, 14:39:49
+[36] Biber.pm:415> INFO - Reading 'bcg.bcf'
+[62] Biber.pm:943> INFO - Found 3 citekeys in bib section 0
+[67] Biber.pm:4256> INFO - Processing section 0
+[67] Utils.pm:75> INFO - Globbing data source 'reference.bib'
+[67] Utils.pm:91> INFO - Globbed data source 'reference.bib' to reference.bib
+[72] Biber.pm:4455> INFO - Looking for bibtex format file 'reference.bib' for section 0
+[72] bibtex.pm:1653> INFO - LaTeX decoding ...
+[74] bibtex.pm:1471> INFO - Found BibTeX data source 'reference.bib'
+[90] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[90] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[90] Biber.pm:4084> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[90] Biber.pm:4090> INFO - No sort tailoring available for locale 'en-US'
+[92] bbl.pm:652> INFO - Writing 'bcg.bbl' with encoding 'UTF-8'
+[93] bbl.pm:755> INFO - Output to bcg.bbl

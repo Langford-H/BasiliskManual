@@ -1,0 +1,47 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n+nf}{residual} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{al}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{bl}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{resl}\PYG{p}{,} \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{a} \PYG{o}{=} \PYG{n}{al}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{b} \PYG{o}{=} \PYG{n}{bl}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{res} \PYG{o}{=} \PYG{n}{resl}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{];}
+  \PYG{k}{struct} \PYG{n}{Poisson} \PYG{o}{*} \PYG{n}{p} \PYG{o}{=} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Poisson} \PYG{o}{*}\PYG{p}{)} \PYG{n}{data}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{n}{face} \PYG{k}{vector} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{alpha}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{k}{scalar} \PYG{n}{lambda} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{lambda}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{maxres} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}if TREE}
+  \PYG{c+c1}{//此为2阶精度，其离散格式为$ \frac{(\alpha_{i+\frac{1}{2},j}-\alpha_{i-\frac{1}{2},j})\frac{a_{i,j}-a_{i-1,j}}{\Delta}}{\Delta}+\frac{(\alpha_{i,j+\frac{1}{2}}-\alpha_{i,j-\frac{1}{2}}){\Delta}\frac{a_{i,j}-a_{i,j-1}}{\Delta}}{\Delta}+\lambda a_{i,j}-\gamma=b $}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{g}\PYG{p}{[];}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+    \PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{face\PYGZus{}gradient\PYGZus{}x} \PYG{p}{(}\PYG{n}{a}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);}
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{n+nl}{max}\PYG{p}{:}\PYG{n}{maxres}\PYG{p}{),} \PYG{n}{nowarning}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{res}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{b}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{lambda}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{a}\PYG{p}{[];}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{res}\PYG{p}{[]} \PYG{o}{\PYGZhy{}=} \PYG{p}{(}\PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{embed\PYGZus{}flux}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{c}\PYG{p}{,} \PYG{n}{e} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{embed\PYGZus{}flux} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{c}\PYG{p}{);}
+      \PYG{n}{res}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{c} \PYG{o}{\PYGZhy{}} \PYG{n}{e}\PYG{o}{*}\PYG{n}{a}\PYG{p}{[];}
+    \PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// EMBED}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs} \PYG{p}{(}\PYG{n}{res}\PYG{p}{[])} \PYG{o}{\PYGZgt{}} \PYG{n}{maxres}\PYG{p}{)}
+      \PYG{n}{maxres} \PYG{o}{=} \PYG{n}{fabs} \PYG{p}{(}\PYG{n}{res}\PYG{p}{[]);}
+  \PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// !TREE}
+  \PYG{c+cm}{/* \PYGZdq{}naive\PYGZdq{} discretisation (only 1st order on trees) */}
+  \PYG{c+c1}{//此为一阶精度格式，离散格式为$\frac{\alpha_{i+\frac{1}{2},j}\frac{a_{i+1,j}-a_{i,j}}{\Delta}-\alpha_{i-\frac{1}{2},j}\frac{a_{i,j}-a_{i-1,j}}{\Delta}}{\Delta}+\frac{\alpha_{i,j+\frac{1}{2}}\frac{a_{i,j+1}-a_{i,j}}{\Delta}-\alpha_{i,j-\frac{1}{2}}\frac{a_{i,j}-a_{i,j-1}}{\Delta}}{\Delta}+\lambda a_{i,j}-\gamma=b$}
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{n+nl}{max}\PYG{p}{:}\PYG{n}{maxres}\PYG{p}{),} \PYG{n}{nowarning}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{res}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{b}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{lambda}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{a}\PYG{p}{[];}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{res}\PYG{p}{[]} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{*}\PYG{n}{face\PYGZus{}gradient\PYGZus{}x} \PYG{p}{(}\PYG{n}{a}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZhy{}}
+        \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{*}\PYG{n}{face\PYGZus{}gradient\PYGZus{}x} \PYG{p}{(}\PYG{n}{a}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{embed\PYGZus{}flux}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{c}\PYG{p}{,} \PYG{n}{e} \PYG{o}{=} \PYG{n}{p}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{embed\PYGZus{}flux} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{c}\PYG{p}{);}
+      \PYG{n}{res}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{c} \PYG{o}{\PYGZhy{}} \PYG{n}{e}\PYG{o}{*}\PYG{n}{a}\PYG{p}{[];}
+    \PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// EMBED}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs} \PYG{p}{(}\PYG{n}{res}\PYG{p}{[])} \PYG{o}{\PYGZgt{}} \PYG{n}{maxres}\PYG{p}{)}
+      \PYG{n}{maxres} \PYG{o}{=} \PYG{n}{fabs} \PYG{p}{(}\PYG{n}{res}\PYG{p}{[]);}\PYG{c+c1}{//选取计算域中最大的残差返回}
+  \PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// !TREE}
+  \PYG{k}{return} \PYG{n}{maxres}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

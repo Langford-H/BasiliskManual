@@ -1,0 +1,70 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kt}{void} \PYG{n+nf}{prediction}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{vector} \PYG{n}{du}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k}{scalar} \PYG{n}{s} \PYG{o}{=} \PYG{n}{new} \PYG{k}{scalar}\PYG{p}{;}
+    \PYG{n}{du}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{s}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{gradient}\PYG{p}{)}
+    \PYG{n}{foreach}\PYG{p}{()}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+        \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{fs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{||} \PYG{o}{!}\PYG{n}{fs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+      \PYG{n}{du}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{k}{else}
+\PYG{c+cp}{\PYGZsh{}endif}
+      \PYG{n}{du}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{gradient} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[],} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}\PYG{c+c1}{//gradient是在common.h中保存的每个scalar都具有的数据结构特别类型}
+      \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else}
+    \PYG{n}{foreach}\PYG{p}{()}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+        \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{fs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{||} \PYG{o}{!}\PYG{n}{fs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+      \PYG{n}{du}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{k}{else}
+\PYG{c+cp}{\PYGZsh{}endif}
+      \PYG{n}{du}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}\PYG{c+c1}{//其实就是求该方向上的梯度}
+    \PYG{p}{\PYGZcb{}}
+
+  \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{uf}\PYG{p}{\PYGZcb{});}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{double} \PYG{n}{un} \PYG{o}{=} \PYG{n}{dt}\PYG{o}{*}\PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{),} \PYG{n}{s} \PYG{o}{=} \PYG{n}{sign}\PYG{p}{(}\PYG{n}{un}\PYG{p}{);}
+    \PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{s} \PYG{o}{+} \PYG{l+m+mf}{1.}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+    \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{p}{(}\PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{*}\PYG{n}{dt}\PYG{o}{/}\PYG{l+m+mf}{4.} \PYG{o}{+} \PYG{n}{s}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{\PYGZhy{}} \PYG{n}{s}\PYG{o}{*}\PYG{n}{un}\PYG{p}{)}\PYG{o}{*}\PYG{n}{du}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Delta}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 1}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{fyy} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.} \PYG{o}{?} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{:} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{];}
+      \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZhy{}=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{u}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{fyy}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+cp}{\PYGZsh{}endif}
+    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 2}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{p}{\PYGZob{}}
+      \PYG{k+kt}{double} \PYG{n}{fzz} \PYG{o}{=} \PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.} \PYG{o}{?} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{:} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{];}
+      \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZhy{}=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{u}\PYG{p}{.}\PYG{n}{z}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{fzz}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+cp}{\PYGZsh{}endif}
+    \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{*=} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{n}{delete} \PYG{p}{((}\PYG{k}{scalar} \PYG{o}{*}\PYG{p}{)\PYGZob{}}\PYG{n}{du}\PYG{p}{\PYGZcb{});}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{Advection term}
+
+\PYG{c+cm}{We predict the face velocity field $\mathbf{u}_f$ at time $t+\Delta t/2$ then project it to make it divergence\PYGZhy{}free. We can then use it to}
+\PYG{c+cm}{compute the velocity advection term, using the standard}
+\PYG{c+cm}{Bell\PYGZhy{}Collela\PYGZhy{}Glaz advection scheme for each component of the velocity}
+\PYG{c+cm}{field. */}
+
+\PYG{n}{event} \PYG{n+nf}{advection\PYGZus{}term} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{stokes}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{prediction}\PYG{p}{();}\PYG{c+c1}{//注释：预测步，uf位于n+1/2时层}
+    \PYG{n}{mgpf} \PYG{o}{=} \PYG{n}{project} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{,} \PYG{n}{pf}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{dt}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{,} \PYG{n}{mgpf}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{);}\PYG{c+c1}{//注释：uf无散化，pf位于n+1/2时层}
+    \PYG{n}{advection} \PYG{p}{((}\PYG{k}{scalar} \PYG{o}{*}\PYG{p}{)\PYGZob{}}\PYG{n}{u}\PYG{p}{\PYGZcb{},} \PYG{n}{uf}\PYG{p}{,} \PYG{n}{dt}\PYG{p}{,} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*}\PYG{p}{)\PYGZob{}}\PYG{n}{g}\PYG{p}{\PYGZcb{});}\PYG{c+c1}{//注释：对流方程计算得到$\mathbf{u^{**}}$}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

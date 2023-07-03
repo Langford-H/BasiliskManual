@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}eventtest1.h\PYGZdq{}}
+\PYG{c+c1}{//\PYGZsh{}include \PYGZdq{}eventtest2.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}run.h\PYGZdq{}}
+
+\PYG{c+cp}{\PYGZsh{}define MAXTIME 1}
+
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{run}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{event} \PYG{n}{scriptA}\PYG{p}{(}\PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}=}\PYG{n}{MAXTIME}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stdout}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}script1}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{event} \PYG{n}{scriptB}\PYG{p}{(}\PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}=}\PYG{n}{MAXTIME}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stdout}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}script2}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

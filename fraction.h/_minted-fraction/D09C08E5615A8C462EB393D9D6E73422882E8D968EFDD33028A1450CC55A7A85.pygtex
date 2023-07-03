@@ -1,0 +1,39 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{struct} \PYG{n}{OutputFacets} \PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{;}
+  \PYG{k+kt}{FILE} \PYG{o}{*} \PYG{n}{fp}\PYG{p}{;}     \PYG{c+c1}{// optional: default is stdout}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{s}\PYG{p}{;} \PYG{c+c1}{// optional: default is none}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{n}{trace}
+\PYG{k+kt}{void} \PYG{n+nf}{output\PYGZus{}facets} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{OutputFacets} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{c} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{c}\PYG{p}{;}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{s} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{s}\PYG{p}{;}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{p}\PYG{p}{.}\PYG{n}{fp}\PYG{p}{)} \PYG{n}{p}\PYG{p}{.}\PYG{n}{fp} \PYG{o}{=} \PYG{n}{stdout}\PYG{p}{;}\PYG{c+c1}{//如果并没有定义相关输出数据储存位置，则默认定义为标准输出}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)} \PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{c+c1}{//如果没有输入单元表面面积分数，则将其定义为负数}
+
+  \PYG{n}{foreach}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{1e\PYGZhy{}6} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1.} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{1e\PYGZhy{}6}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{n}{facet\PYGZus{}normal} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{,} \PYG{n}{s}\PYG{p}{);}
+      \PYG{k+kt}{double} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{plane\PYGZus{}alpha} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[],} \PYG{n}{n}\PYG{p}{);}\PYG{c+c1}{//利用geometry.h中的相关函数进行边界函数求解}
+\PYG{c+cp}{\PYGZsh{}if dimension == 2}
+      \PYG{n}{coord} \PYG{n}{segment}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{];}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{facets} \PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{segment}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{)}
+         \PYG{n}{fprintf} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{fp}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZpc{}g \PYGZpc{}g}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZpc{}g \PYGZpc{}g}\PYG{l+s+se}{\PYGZbs{}n\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+         \PYG{n}{x} \PYG{o}{+} \PYG{n}{segment}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{].}\PYG{n}{x}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{,} \PYG{n}{y} \PYG{o}{+} \PYG{n}{segment}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{].}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{,}
+         \PYG{n}{x} \PYG{o}{+} \PYG{n}{segment}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{].}\PYG{n}{x}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{,} \PYG{n}{y} \PYG{o}{+} \PYG{n}{segment}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{].}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}\PYG{c+c1}{//如果为2维情况，且确定单元被界面分割，则使用geometry中facet函数定义计算交点坐标，并将其输出至stdout中}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// dimension == 3 3维同理}
+      \PYG{n}{coord} \PYG{n}{v}\PYG{p}{[}\PYG{l+m+mi}{12}\PYG{p}{];}
+      \PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{n}{facets} \PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{v}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{);}
+      \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{m}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+         \PYG{n}{fprintf} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{fp}\PYG{p}{,} \PYG{l+s}{\PYGZdq{}\PYGZpc{}g \PYGZpc{}g \PYGZpc{}g}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,}
+         \PYG{n}{x} \PYG{o}{+} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{x}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{,} \PYG{n}{y} \PYG{o}{+} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{,} \PYG{n}{z} \PYG{o}{+} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{].}\PYG{n}{z}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{);}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{m} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)}
+         \PYG{n}{fputc} \PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}n\PYGZsq{}}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{fp}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+    \PYG{p}{\PYGZcb{}}
+
+  \PYG{n}{fflush} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{fp}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

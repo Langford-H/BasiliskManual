@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}geometry.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}if dimension == 1}
+\PYG{n}{coord} \PYG{n+nf}{mycs} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mf}{1.}\PYG{p}{\PYGZcb{};}
+  \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}elif dimension == 2}
+\PYG{c+cp}{\PYGZsh{} include \PYGZdq{}myc2d.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// dimension == 3}
+\PYG{c+cp}{\PYGZsh{} include \PYGZdq{}myc.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{By default the interface normal is computed using the MYC}
+\PYG{c+cm}{approximation. This can be overloaded by redefining this macro. */}
+
+\PYG{c+cp}{\PYGZsh{}ifndef interface\PYGZus{}normal}
+\PYG{c+cp}{\PYGZsh{} define interface\PYGZus{}normal(point, c) mycs (point, c)}\PYG{c+c1}{//计算两相界面法向量，此处的mycs函数是从myc.h中抽取出来的}
+\PYG{c+cp}{\PYGZsh{}endif}
+\end{Verbatim}

@@ -1,0 +1,45 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{} Curvature of an interface}
+
+\PYG{c+cm}{The curvature field is defined only in interfacial cells. In all the}
+\PYG{c+cm}{other cells it takes the value *nodata*.}
+
+\PYG{c+cm}{On trees, we need to redefine the restriction function to take}
+\PYG{c+cm}{this into account i.e. the curvature of the parent cell is the average}
+\PYG{c+cm}{of the curvatures in the interfacial child cells. */}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{curvature\PYGZus{}restriction} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{kappa}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{double} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{n}{s} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}child}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)}
+      \PYG{n}{k} \PYG{o}{+=} \PYG{n}{kappa}\PYG{p}{[],} \PYG{n}{s}\PYG{o}{++}\PYG{p}{;}
+  \PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{s} \PYG{o}{?} \PYG{n}{k}\PYG{o}{/}\PYG{n+nl}{s} \PYG{p}{:} \PYG{n}{nodata}\PYG{p}{;}\PYG{c+c1}{//注意这里的判断并不是kappa[]==s，而是直接判断s值是否为0，如果是0则说明子单元中没有任何的界面单元，若不是0则该单元则继承子单元中边界单元的平均曲率}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The prolongation function performs a similar averaging, but using the}
+\PYG{c+cm}{same stencil as that used for bilinear interpolation, so that the}
+\PYG{c+cm}{symmetries of the volume fraction field and curvature field are}
+\PYG{c+cm}{preserved. */}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{curvature\PYGZus{}prolongation} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{kappa}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{foreach\PYGZus{}child}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{double} \PYG{n}{sk} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{n}{s} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+    \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 1}
+      \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{j}\PYG{o}{++}\PYG{p}{)}
+    \PYG{c+cp}{\PYGZsh{}endif}
+      \PYG{c+cp}{\PYGZsh{}if dimension \PYGZgt{} 2}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{k}\PYG{o}{++}\PYG{p}{)}
+      \PYG{c+cp}{\PYGZsh{}endif}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{coarse}\PYG{p}{(}\PYG{n}{kappa}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{x}\PYG{o}{*}\PYG{n}{i}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{y}\PYG{o}{*}\PYG{n}{j}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{z}\PYG{o}{*}\PYG{n}{k}\PYG{p}{)} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)}
+    \PYG{n}{sk} \PYG{o}{+=} \PYG{n}{coarse}\PYG{p}{(}\PYG{n}{kappa}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{x}\PYG{o}{*}\PYG{n}{i}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{y}\PYG{o}{*}\PYG{n}{j}\PYG{p}{,}\PYG{n}{child}\PYG{p}{.}\PYG{n}{z}\PYG{o}{*}\PYG{n}{k}\PYG{p}{),} \PYG{n}{s}\PYG{o}{++}\PYG{p}{;}
+    \PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{s} \PYG{o}{?} \PYG{n}{sk}\PYG{o}{/}\PYG{n+nl}{s} \PYG{p}{:} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// TREE}
+\end{Verbatim}

@@ -1,0 +1,146 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{We now need to choose one of the $x$, $y$ or $z$ height functions to}
+\PYG{c+cm}{compute the curvature. This is done by the function below which}
+\PYG{c+cm}{returns the HF curvature given a volume fraction field *c* and a}
+\PYG{c+cm}{height function field *h*. */}
+
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n+nf}{height\PYGZus{}curvature} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We first define pairs of normal coordinates *n* (computed by simple}
+\PYG{c+cm}{  differencing of *c*) and corresponding HF curvature function *kappa*}
+\PYG{c+cm}{  (defined above). */}
+
+  \PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{double} \PYG{n}{n}\PYG{p}{;}
+    \PYG{k+kt}{double} \PYG{p}{(}\PYG{o}{*} \PYG{n}{kappa}\PYG{p}{)} \PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{k}{vector}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}} \PYG{n}{NormKappa}\PYG{p}{;}
+  \PYG{k}{struct} \PYG{p}{\PYGZob{}} \PYG{n}{NormKappa} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{z}\PYG{p}{;} \PYG{p}{\PYGZcb{}} \PYG{n}{n}\PYG{p}{;} \PYG{c+c1}{//定义命名为n的结构体，其内容包含三个命名为x y z的MNormKappa结构体}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{c}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{kappa} \PYG{o}{=} \PYG{n}{kappa\PYGZus{}x}\PYG{p}{;}\PYG{c+c1}{//将相关结构体名下的函数变量指向之前定义的函数kappa\PYGZus{}x（在上一小节中定义了三个函数kappa\PYGZus{}x, kappa\PYGZus{}y, kappa\PYGZus{}z）}
+  \PYG{k+kt}{double} \PYG{p}{(}\PYG{o}{*} \PYG{n}{kappaf}\PYG{p}{)} \PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{k}{vector}\PYG{p}{)} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;} \PYG{n}{NOT\PYGZus{}UNUSED} \PYG{p}{(}\PYG{n}{kappaf}\PYG{p}{);}\PYG{c+c1}{//定义一个同类型数据的空指针}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We sort these pairs in decreasing order of $|n|$. */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormKappa}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{);}\PYG{c+c1}{//注意swap的功能是进行内存地址的相互交换，也就是说交换后排在第一个位置的值依旧是n.x只不过相应的指向内容变成原本n.y的内存内容，也就是说在n.x下储存的函数名有可能是kappa\PYGZus{}y}
+\PYG{c+cp}{\PYGZsh{}if dimension == 3}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormKappa}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormKappa}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We try each curvature function in turn. */}
+
+  \PYG{k+kt}{double} \PYG{n}{kappa} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}\PYG{c+c1}{//从相应fraction变化最剧烈的地方开始进行计算}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{kappa} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{kappa} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{kappa} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{kappa} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//如果kappa已经赋值成功，那么就跳过对kappa的相应赋值，将原本的数据结构重新指向上文中定义好的kappa类型空指针中}
+        \PYG{n}{kappaf} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{kappa}\PYG{p}{;}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.}\PYG{p}{)}
+          \PYG{n}{kappa} \PYG{o}{=} \PYG{o}{\PYGZhy{}} \PYG{n}{kappa}\PYG{p}{;}\PYG{c+c1}{//若体积分数移动方向为递减，则相应的曲率应当是负数值}
+      \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{kappa} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     We limit the maximum curvature to $1/\Delta$. */}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{kappa}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{1.}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{)}
+      \PYG{n}{kappa} \PYG{o}{=} \PYG{n}{sign}\PYG{p}{(}\PYG{n}{kappa}\PYG{p}{)}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     We add the axisymmetric curvature if necessary. */}
+
+\PYG{c+cp}{\PYGZsh{}if AXI}\PYG{c+c1}{//旋转对称相关，具体内容待查}
+    \PYG{k+kt}{double} \PYG{n}{nr}\PYG{p}{,} \PYG{n}{r} \PYG{o}{=} \PYG{n}{y}\PYG{p}{,} \PYG{n}{hx}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{kappaf} \PYG{o}{==} \PYG{n}{kappa\PYGZus{}x}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{hx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{\PYGZhy{}} \PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]))}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+      \PYG{n}{nr} \PYG{o}{=} \PYG{n}{hx}\PYG{o}{*}\PYG{p}{(}\PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])} \PYG{o}{?} \PYG{l+m+mi}{1} \PYG{o}{:} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else} \PYG{p}{\PYGZob{}}
+      \PYG{n}{r} \PYG{o}{+=} \PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[])}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{;}
+      \PYG{n}{hx} \PYG{o}{=} \PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{])} \PYG{o}{\PYGZhy{}} \PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{]))}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+      \PYG{n}{nr} \PYG{o}{=} \PYG{n}{orientation}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[])} \PYG{o}{?} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{:} \PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{c+cm}{/* limit the minimum radius to half the grid size */}
+    \PYG{n}{kappa} \PYG{o}{+=} \PYG{n}{nr}\PYG{o}{/}\PYG{n}{max} \PYG{p}{(}\PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{sq}\PYG{p}{(}\PYG{n}{hx}\PYG{p}{))}\PYG{o}{*}\PYG{n}{r}\PYG{p}{,} \PYG{n}{Delta}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{k}{return} \PYG{n}{kappa}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The function below works in a similar manner to return the normal}
+\PYG{c+cm}{estimated using height\PYGZhy{}functions (or a *nodata* vector if this cannot}
+\PYG{c+cm}{be done). */}
+
+\PYG{n}{coord} \PYG{n+nf}{height\PYGZus{}normal} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We first define pairs of normal coordinates *n* (computed by simple}
+\PYG{c+cm}{  differencing of *c*) and corresponding normal function *normal*}
+\PYG{c+cm}{  (defined above). */}
+
+  \PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{double} \PYG{n}{n}\PYG{p}{;}
+    \PYG{n}{coord} \PYG{p}{(}\PYG{o}{*} \PYG{n}{normal}\PYG{p}{)} \PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{k}{vector}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}} \PYG{n}{NormNormal}\PYG{p}{;}
+  \PYG{k}{struct} \PYG{p}{\PYGZob{}} \PYG{n}{NormNormal} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{z}\PYG{p}{;} \PYG{p}{\PYGZcb{}} \PYG{n}{n}\PYG{p}{;}\PYG{c+c1}{//与上一个函数同等，对相应结构体赋值函数}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{c}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{normal} \PYG{o}{=} \PYG{n}{normal\PYGZus{}x}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We sort these pairs in decreasing order of $|n|$. */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormNormal}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}if dimension == 3}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormNormal}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormNormal}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We try each normal function in turn. */}
+
+  \PYG{n}{coord} \PYG{n}{normal} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{\PYGZcb{};}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{normal}\PYG{p}{.}\PYG{n}{x} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)}
+      \PYG{n}{normal} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{normal} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+
+  \PYG{k}{return} \PYG{n}{normal}\PYG{p}{;}\PYG{c+c1}{//相应的nodata选项已经在normal函数中被排除掉了}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{In three dimensions, these functions return the (two) components of}
+\PYG{c+cm}{the normal projected onto the $(x,y)$ plane (respectively). */}
+
+\PYG{c+cp}{\PYGZsh{}if dimension == 3}
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}\PYG{c+c1}{//此函数具体的功能待查，目前并没有遇见任何头文件中带有本函数}
+\PYG{n}{coord} \PYG{n}{height\PYGZus{}normal\PYGZus{}z} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{coord} \PYG{n}{nx} \PYG{o}{=} \PYG{n}{normal2\PYGZus{}x} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+  \PYG{n}{coord} \PYG{n}{ny} \PYG{o}{=} \PYG{n}{normal2\PYGZus{}y} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{nx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{ny}\PYG{p}{.}\PYG{n}{x}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+    \PYG{n}{normalize} \PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{nx}\PYG{p}{);}
+    \PYG{k}{return} \PYG{n}{nx}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{ny}\PYG{p}{.}\PYG{n}{x} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{normalize} \PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{ny}\PYG{p}{);}
+    \PYG{k}{return} \PYG{n}{ny}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{return} \PYG{p}{(}\PYG{n}{coord}\PYG{p}{)\PYGZob{}}\PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{,} \PYG{n}{nodata}\PYG{p}{\PYGZcb{};}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif}
+\end{Verbatim}

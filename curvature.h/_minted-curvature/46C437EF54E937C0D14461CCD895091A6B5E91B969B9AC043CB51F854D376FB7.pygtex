@@ -1,0 +1,73 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{//注意以下部分函数的调用位置为“reduced.h”，具体作用是使用势场来定义加速度，而不是寻常的直接重写acceleration event}
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{} Position of an interface}
+
+\PYG{c+cm}{with $\mathbf{G}$ and $\mathbf{Z}$ two vectors and $\mathbf{x}$ the}
+\PYG{c+cm}{coordinates of the interface.}
+
+\PYG{c+cm}{This is defined only in interfacial cells. In all the other cells it}
+\PYG{c+cm}{takes the value *nodata*.}
+
+\PYG{c+cm}{We first need a function to compute the position $\mathbf{x}$ of an}
+\PYG{c+cm}{interface. For accuracy, we first try to use height functions. */}
+
+\PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n}{pos\PYGZus{}x} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*} \PYG{n}{G}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*} \PYG{n}{Z}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]))} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{1.}\PYG{p}{)}\PYG{c+c1}{//注意fabs(height(h.x[]))\PYGZgt{}1.会将一部分界面网格过滤，见说明}
+    \PYG{k}{return} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{n}{coord} \PYG{n}{o} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{z}\PYG{p}{\PYGZcb{};}\PYG{c+c1}{//在此处直接定义了该网格所处的坐标位置}
+  \PYG{n}{o}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+=} \PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])}\PYG{o}{*}\PYG{n}{Delta}\PYG{p}{;}\PYG{c+c1}{//由于过滤掉了非界面网格，此处的作用就是精确的定义界面所在的相关位置}
+  \PYG{k+kt}{double} \PYG{n}{pos} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}\PYG{c+c1}{//注意这里foreach\PYGZus{}dimension()相关操作目的是进行矢量点乘}
+    \PYG{n}{pos} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{o}\PYG{p}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{Z}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{x}\PYG{p}{;}
+  \PYG{k}{return} \PYG{n}{pos}\PYG{p}{;}\PYG{c+c1}{//根据矢量计算返回pos值}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{We now need to choose one of the $x$, $y$ or $z$ height functions to}
+\PYG{c+cm}{compute the position. This is done by the function below which returns}
+\PYG{c+cm}{the HF position given a volume fraction field *f*, a height function}
+\PYG{c+cm}{field *h* and vectors *G* and *Z*. */}
+
+\PYG{k}{static} \PYG{k+kt}{double} \PYG{n}{height\PYGZus{}position} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{f}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{,}
+\PYG{n}{coord} \PYG{o}{*} \PYG{n}{G}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*} \PYG{n}{Z}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We first define pairs of normal coordinates *n* (computed by simple}
+\PYG{c+cm}{  differencing of *f*) and corresponding HF position function *pos*}
+\PYG{c+cm}{  (defined above). */}
+
+  \PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{double} \PYG{n}{n}\PYG{p}{;}
+    \PYG{k+kt}{double} \PYG{p}{(}\PYG{o}{*} \PYG{n}{pos}\PYG{p}{)} \PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{k}{vector}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}} \PYG{n}{NormPos}\PYG{p}{;}\PYG{c+c1}{//定义一种NormPos数据类型}
+  \PYG{k}{struct} \PYG{p}{\PYGZob{}} \PYG{n}{NormPos} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{z}\PYG{p}{;} \PYG{p}{\PYGZcb{}} \PYG{n}{n}\PYG{p}{;}\PYG{c+c1}{//n中包含三个NormPos类型的数据}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n} \PYG{o}{=} \PYG{n}{f}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{f}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{pos} \PYG{o}{=} \PYG{n}{pos\PYGZus{}x}\PYG{p}{;}\PYG{c+c1}{//注意，此处是一个函数指针传递，也就是说该位置寄存的应该是上文中定义的pos\PYGZus{}x函数}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We sort these pairs in decreasing order of $|n|$. */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormPos}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}if dimension == 3}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormPos}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{.}\PYG{n}{n}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{.}\PYG{n}{n}\PYG{p}{))}
+    \PYG{n}{swap} \PYG{p}{(}\PYG{n}{NormPos}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{y}\PYG{p}{,} \PYG{n}{n}\PYG{p}{.}\PYG{n}{z}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We try each position function in turn. */}
+  \PYG{c+c1}{//老方法，尝试直接返回$\mathbf{G}(\mathbf{x}-\mathbf{Z})$}
+  \PYG{k+kt}{double} \PYG{n}{pos} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{pos} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)}
+      \PYG{n}{pos} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{pos} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{G}\PYG{p}{,} \PYG{n}{Z}\PYG{p}{);}
+
+  \PYG{k}{return} \PYG{n}{pos}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

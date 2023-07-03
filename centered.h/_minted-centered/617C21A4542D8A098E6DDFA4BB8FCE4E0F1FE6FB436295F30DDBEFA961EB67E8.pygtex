@@ -1,0 +1,95 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Acceleration term}
+
+\PYG{c+cm}{The acceleration term $\mathbf{a}$ needs careful treatment as many}
+\PYG{c+cm}{equilibrium solutions depend on exact balance between the acceleration}
+\PYG{c+cm}{term and the pressure gradient: for example Laplace\PYGZsq{}s balance for}
+\PYG{c+cm}{surface tension or hydrostatic pressure in the presence of gravity.}
+
+\PYG{c+cm}{To ensure a consistent discretisation, the acceleration term is}
+\PYG{c+cm}{defined on faces as are pressure gradients and the centered combined}
+\PYG{c+cm}{acceleration and pressure gradient term $\mathbf{g}$ is obtained by}
+\PYG{c+cm}{averaging.}
+
+\PYG{c+cm}{The (provisionary) face velocity field at time $t+\Delta t$ is}
+\PYG{c+cm}{obtained by interpolation from the centered velocity field. The}
+\PYG{c+cm}{acceleration term is added. */}
+\PYG{c+c1}{//说明：基于balance\PYGZhy{}force方法，压力和表面张力两项在程序各方程中同时考虑。}
+
+\PYG{n}{event} \PYG{n+nf}{acceleration} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{uf}\PYG{p}{\PYGZcb{});}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+    \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{n}{face\PYGZus{}value} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{+} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{a}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]);}\PYG{c+c1}{//此处为更新位于$n+\frac{1}{2}$时层的加速度项，并将其作为补充，填充速度项，从而获得速度预测步与压力梯度的poisson方程}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Approximate projection}
+
+\PYG{c+cm}{This function constructs the centered pressure gradient and}
+\PYG{c+cm}{acceleration field *g* using the face\PYGZhy{}centered acceleration field *a*}
+\PYG{c+cm}{and the cell\PYGZhy{}centered pressure field *p*. */}
+
+\PYG{k+kt}{void} \PYG{n+nf}{centered\PYGZus{}gradient} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{p}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{g}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We first compute a face field $\mathbf{g}_f$ combining both}
+\PYG{c+cm}{  acceleration and pressure gradient. */}
+
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{gf}\PYG{p}{[];}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+    \PYG{n}{gf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{a}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{p}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{n}{Delta}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We average these face values to obtain the centered, combined}
+\PYG{c+cm}{  acceleration and pressure gradient field. */}
+
+  \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{g}\PYG{p}{\PYGZcb{});}
+  \PYG{n}{foreach}\PYG{p}{()}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{gf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{gf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{SEPS}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{To get the pressure field at time $t + \Delta t$ we project the face}
+\PYG{c+cm}{velocity field (which will also be used for tracer advection at the}
+\PYG{c+cm}{next timestep). Then compute the centered gradient field *g*. */}
+
+\PYG{n}{event} \PYG{n+nf}{projection} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{mgp} \PYG{o}{=} \PYG{n}{project} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{dt}\PYG{p}{,} \PYG{n}{mgp}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{);}
+  \PYG{n}{centered\PYGZus{}gradient} \PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{g}\PYG{p}{);}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We add the gradient field *g* to the centered velocity field. */}
+
+  \PYG{n}{correction} \PYG{p}{(}\PYG{n}{dt}\PYG{p}{);}\PYG{c+c1}{//此处是对网格中心速度场进行源项附加（注意之前加速度操作及压力梯度更新都是面元速度，单元中心速度自扩散项中去掉$n-\frac{1}{2}$时层的加速度与压力梯度后再未更新）}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{Some derived solvers need to hook themselves at the end of the}
+\PYG{c+cm}{timestep. */}
+
+\PYG{n}{event} \PYG{n+nf}{end\PYGZus{}timestep} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,} \PYG{n}{last}\PYG{p}{);}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Adaptivity}
+
+\PYG{c+cm}{After mesh adaptation fluid properties need to be updated. When using}
+\PYG{c+cm}{[embedded boundaries](/src/embed.h) the fluid fractions and face}
+\PYG{c+cm}{fluxes need to be checked for inconsistencies. */}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+\PYG{n}{event} \PYG{n+nf}{adapt} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+  \PYG{n}{fractions\PYGZus{}cleanup} \PYG{p}{(}\PYG{n}{cs}\PYG{p}{,} \PYG{n}{fs}\PYG{p}{);}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{o}{!}\PYG{n}{fs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])}
+      \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif}
+  \PYG{n}{event} \PYG{p}{(}\PYG{l+s}{\PYGZdq{}properties\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif}
+\end{Verbatim}

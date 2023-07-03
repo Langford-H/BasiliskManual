@@ -1,0 +1,127 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{bell1989second}{article}{}
+      \name{author}{3}{}{%
+        {{hash=d10a079953d9591d44e42c28b8a87f11}{%
+           family={Bell},
+           familyi={B\bibinitperiod},
+           given={John\bibnamedelima B},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=c41785440d0a194370dd86cca9827c37}{%
+           family={Colella},
+           familyi={C\bibinitperiod},
+           given={Phillip},
+           giveni={P\bibinitperiod}}}%
+        {{hash=6fac0000c0b99ed4af0dd232ce3a71c8}{%
+           family={Glaz},
+           familyi={G\bibinitperiod},
+           given={Harland\bibnamedelima M},
+           giveni={H\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \strng{fullhash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \strng{bibnamehash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \strng{authorbibnamehash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \strng{authornamehash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \strng{authorfullhash}{19db30a55b0cc36d6973d146f1fcf38a}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of computational physics}
+      \field{number}{2}
+      \field{title}{A second-order projection method for the incompressible Navier-Stokes equations}
+      \field{volume}{85}
+      \field{year}{1989}
+      \field{pages}{257\bibrangedash 283}
+      \range{pages}{27}
+    \endentry
+    \entry{kim1985application}{article}{}
+      \name{author}{2}{}{%
+        {{hash=13f5b9e17c13317d94d1ea5da03f7d38}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=8853dff8f39e11829340cc196aaaeda6}{%
+           family={Moin},
+           familyi={M\bibinitperiod},
+           given={Parviz},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \strng{fullhash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \strng{bibnamehash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \strng{authorbibnamehash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \strng{authornamehash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \strng{authorfullhash}{1c3e1abe0ae6ae6213a8264ca0162e8f}
+      \field{sortinit}{K}
+      \field{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of computational physics}
+      \field{number}{2}
+      \field{title}{Application of a fractional-step method to incompressible Navier-Stokes equations}
+      \field{volume}{59}
+      \field{year}{1985}
+      \field{pages}{308\bibrangedash 323}
+      \range{pages}{16}
+    \endentry
+    \entry{popinet2003gerris}{article}{}
+      \name{author}{1}{}{%
+        {{hash=33dd5ed435ec6d727e06c27776df80c2}{%
+           family={Popinet},
+           familyi={P\bibinitperiod},
+           given={St{é}phane},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{fullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{bibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorbibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authornamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorfullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of computational physics}
+      \field{number}{2}
+      \field{title}{Gerris: a tree-based adaptive solver for the incompressible Euler equations in complex geometries}
+      \field{volume}{190}
+      \field{year}{2003}
+      \field{pages}{572\bibrangedash 600}
+      \range{pages}{29}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

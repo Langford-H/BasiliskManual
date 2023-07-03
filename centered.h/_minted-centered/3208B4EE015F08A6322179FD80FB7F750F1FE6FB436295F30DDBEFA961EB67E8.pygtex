@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{event} \PYG{n+nf}{acceleration} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{av} \PYG{o}{=} \PYG{n}{a}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+    \PYG{n}{av}\PYG{p}{.}\PYG{n}{y}\PYG{p}{[]} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mf}{1.}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

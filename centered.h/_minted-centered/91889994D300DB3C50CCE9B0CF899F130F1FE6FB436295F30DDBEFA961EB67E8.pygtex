@@ -1,0 +1,213 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}run.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}timestep.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}bcg.h\PYGZdq{}//注释：对流方程迭代计算}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+\PYG{c+cp}{\PYGZsh{} include \PYGZdq{}viscosity\PYGZhy{}embed.h\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}else}
+\PYG{c+cp}{\PYGZsh{} include \PYGZdq{}viscosity.h\PYGZdq{}}\PYG{c+c1}{//注释：扩散方程迭代计算}
+\PYG{c+cp}{\PYGZsh{}endif}
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The primary variables are the centered pressure field $p$ and the}
+\PYG{c+cm}{centered velocity field $\mathbf{u}$. The centered vector field}
+\PYG{c+cm}{$\mathbf{g}$ will contain pressure gradients and acceleration terms.}
+
+\PYG{c+cm}{We will also need an auxilliary face velocity field $\mathbf{u}_f$ and}
+\PYG{c+cm}{the associated centered pressure field $p_f$. */}
+
+\PYG{k}{scalar} \PYG{n}{p}\PYG{p}{[];}
+\PYG{k}{vector} \PYG{n}{u}\PYG{p}{[],} \PYG{n}{g}\PYG{p}{[];}
+\PYG{k}{scalar} \PYG{n}{pf}\PYG{p}{[];}
+\PYG{n}{face} \PYG{k}{vector} \PYG{n}{uf}\PYG{p}{[];}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{In the case of variable density, the user will need to define both the}
+\PYG{c+cm}{face and centered specific volume fields ($\alpha$ and $\alpha_c$}
+\PYG{c+cm}{respectively) i.e. $1/\rho$. If not specified by the user, these}
+\PYG{c+cm}{fields are set to one i.e. the density is unity.}
+
+\PYG{c+cm}{Viscosity is set by defining the face dynamic viscosity $\mu$; default}
+\PYG{c+cm}{is zero.}
+
+\PYG{c+cm}{The face field $\mathbf{a}$ defines the acceleration term; default is}
+\PYG{c+cm}{zero.}
+
+\PYG{c+cm}{The statistics for the (multigrid) solution of the pressure Poisson}
+\PYG{c+cm}{problems and implicit viscosity are stored in *mgp*, *mgpf*, *mgu*}
+\PYG{c+cm}{respectively.}
+
+\PYG{c+cm}{If *stokes* is set to *true*, the velocity advection term}
+\PYG{c+cm}{$\nabla\cdot(\mathbf{u}\otimes\mathbf{u})$ is omitted. This is a}
+\PYG{c+cm}{reference to [Stokes flows](http://en.wikipedia.org/wiki/Stokes\PYGZus{}flow)}
+\PYG{c+cm}{for which inertia is negligible compared to viscosity. */}
+
+\PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{n}{face} \PYG{k}{vector} \PYG{n}{mu} \PYG{o}{=} \PYG{n}{zerof}\PYG{p}{,} \PYG{n}{a} \PYG{o}{=} \PYG{n}{zerof}\PYG{p}{,} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{unityf}\PYG{p}{;}
+\PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{k}{scalar} \PYG{n}{rho} \PYG{o}{=} \PYG{n}{unity}\PYG{p}{;}
+\PYG{n}{mgstats} \PYG{n}{mgp}\PYG{p}{,} \PYG{n}{mgpf}\PYG{p}{,} \PYG{n}{mgu}\PYG{p}{;}
+\PYG{k+kt}{bool} \PYG{n}{stokes} \PYG{o}{=} \PYG{n+nb}{false}\PYG{p}{;}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Boundary conditions}
+
+\PYG{c+cm}{For the default symmetric boundary conditions, we need to ensure that}
+\PYG{c+cm}{the normal component of the velocity is zero after projection. This}
+\PYG{c+cm}{means that, at the boundary, the acceleration $\mathbf{a}$ must be}
+\PYG{c+cm}{balanced by the pressure gradient. Taking care of boundary orientation}
+\PYG{c+cm}{and staggering of $\mathbf{a}$, this can be written */}
+\PYG{c+c1}{//说明：如event acceleration 所示，uf中包含了a,因此需要在对uf\PYGZca{}\PYGZob{}n+1\PYGZcb{}校正时，需要对边界上的uf减去a的值（令\PYGZbs{}Delta p=a）以满足uf=0}
+
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+\PYG{c+cp}{\PYGZsh{} define neumann\PYGZus{}pressure(i) (alpha.n[i] ? a.n[i]*fm.n[i]/alpha.n[i] :\PYGZca{}\PYGZca{}I\PYGZbs{}}
+\PYG{c+cp}{                  a.n[i]*rho[]/(cm[] + SEPS))}
+\PYG{c+cp}{\PYGZsh{}else}
+\PYG{c+cp}{\PYGZsh{} define neumann\PYGZus{}pressure(i) (a.n[i]*fm.n[i]/alpha.n[i])}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{right}\PYG{p}{]} \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{n}{ghost}\PYG{p}{));}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{left}\PYG{p}{]}  \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{o}{\PYGZhy{}} \PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{));}
+
+\PYG{c+cp}{\PYGZsh{}if AXI}
+\PYG{n}{uf}\PYG{p}{.}\PYG{n}{n}\PYG{p}{[}\PYG{n}{bottom}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+\PYG{n}{uf}\PYG{p}{.}\PYG{n}{t}\PYG{p}{[}\PYG{n}{bottom}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dirichlet}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{);} \PYG{c+c1}{// since uf is multiplied by the metric which}
+                             \PYG{c+c1}{// is zero on the axis of symmetry}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{top}\PYG{p}{]}    \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{n}{ghost}\PYG{p}{));}
+\PYG{c+cp}{\PYGZsh{}else }\PYG{c+c1}{// !AXI}
+\PYG{c+cp}{\PYGZsh{}  if dimension \PYGZgt{} 1}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{top}\PYG{p}{]}    \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{n}{ghost}\PYG{p}{));}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{bottom}\PYG{p}{]} \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{o}{\PYGZhy{}} \PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{));}
+\PYG{c+cp}{\PYGZsh{}  endif}
+\PYG{c+cp}{\PYGZsh{}  if dimension \PYGZgt{} 2}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{front}\PYG{p}{]}  \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{n}{ghost}\PYG{p}{));}
+\PYG{n}{p}\PYG{p}{[}\PYG{n}{back}\PYG{p}{]}   \PYG{o}{=} \PYG{n}{neumann} \PYG{p}{(}\PYG{o}{\PYGZhy{}} \PYG{n}{neumann\PYGZus{}pressure}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{));}
+\PYG{c+cp}{\PYGZsh{}  endif}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// !AXI}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{For [embedded boundaries on trees](/src/embed\PYGZhy{}tree.h), we need to}
+\PYG{c+cm}{define the pressure gradient for prolongation of pressure close to}
+\PYG{c+cm}{embedded boundaries. */}
+
+\PYG{c+cp}{\PYGZsh{}if TREE \PYGZam{}\PYGZam{} EMBED}
+\PYG{k+kt}{void} \PYG{n+nf}{pressure\PYGZus{}embed\PYGZus{}gradient} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{p}\PYG{p}{,} \PYG{n}{coord} \PYG{o}{*} \PYG{n}{g}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{g}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{x} \PYG{o}{=} \PYG{n}{rho}\PYG{p}{[]}\PYG{o}{/}\PYG{p}{(}\PYG{n}{cm}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{SEPS}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{a}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{a}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// TREE \PYGZam{}\PYGZam{} EMBED}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Initial conditions */}
+
+\PYG{n}{event} \PYG{n+nf}{defaults} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{n}{CFL} \PYG{o}{=} \PYG{l+m+mf}{0.8}\PYG{p}{;}\PYG{c+c1}{//注释：影响时间步长的选取}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  The pressures are never dumped. */}
+
+  \PYG{n}{p}\PYG{p}{.}\PYG{n}{nodump} \PYG{o}{=} \PYG{n}{pf}\PYG{p}{.}\PYG{n}{nodump} \PYG{o}{=} \PYG{n+nb}{true}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  The default density field is set to unity (times the metric). */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i} \PYG{o}{==} \PYG{n}{unityf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{fm}\PYG{p}{;}
+    \PYG{n}{rho} \PYG{o}{=} \PYG{n}{cm}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{is\PYGZus{}constant}\PYG{p}{(}\PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+    \PYG{n}{face} \PYG{k}{vector} \PYG{n}{alphav} \PYG{o}{=} \PYG{n}{alpha}\PYG{p}{;}
+    \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+      \PYG{n}{alphav}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  On trees, refinement of the face\PYGZhy{}centered velocity field needs to}
+\PYG{c+cm}{  preserve the divergence\PYGZhy{}free condition. */}
+\PYG{c+c1}{//说明：对不同层级网格中变量和embed边界网格的插值，由细到粗或由粗到细}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+  \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{refine\PYGZus{}face\PYGZus{}solenoidal}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  When using [embedded boundaries](/src/embed.h), the restriction and}
+\PYG{c+cm}{  prolongation operators need to take the boundary into account. */}
+
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+  \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{refine\PYGZus{}face}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{refine\PYGZus{}embed\PYGZus{}face\PYGZus{}x}\PYG{p}{;}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{p}{\PYGZob{}}\PYG{n}{p}\PYG{p}{,} \PYG{n}{pf}\PYG{p}{,} \PYG{n}{u}\PYG{p}{,} \PYG{n}{g}\PYG{p}{\PYGZcb{})} \PYG{p}{\PYGZob{}}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{restriction} \PYG{o}{=} \PYG{n}{restriction\PYGZus{}embed\PYGZus{}linear}\PYG{p}{;}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{refine\PYGZus{}embed\PYGZus{}linear}\PYG{p}{;}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{depends} \PYG{o}{=} \PYG{n}{list\PYGZus{}add} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{depends}\PYG{p}{,} \PYG{n}{cs}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{p}{\PYGZob{}}\PYG{n}{p}\PYG{p}{,} \PYG{n}{pf}\PYG{p}{\PYGZcb{})}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{embed\PYGZus{}gradient} \PYG{o}{=} \PYG{n}{pressure\PYGZus{}embed\PYGZus{}gradient}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// EMBED}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// TREE}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{We had some objects to display by default. */}
+
+\PYG{n}{event} \PYG{n+nf}{default\PYGZus{}display} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+  \PYG{n}{display} \PYG{p}{(}\PYG{l+s}{\PYGZdq{}squares (color = \PYGZsq{}u.x\PYGZsq{}, spread = \PYGZhy{}1)}\PYG{p}{;}\PYG{l+s}{\PYGZdq{});}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{After user initialisation, we initialise the face velocity and fluid}
+\PYG{c+cm}{properties. */}
+
+\PYG{k+kt}{double} \PYG{n}{dtmax}\PYG{p}{;}
+
+\PYG{n}{event} \PYG{n+nf}{init} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{uf}\PYG{p}{\PYGZcb{});}
+  \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+    \PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{face\PYGZus{}value} \PYG{p}{(}\PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We update fluid properties. */}
+
+  \PYG{n}{event} \PYG{p}{(}\PYG{l+s}{\PYGZdq{}properties\PYGZdq{}}\PYG{p}{);}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We set the initial timestep (this is useful only when restoring from}
+\PYG{c+cm}{  a previous run). */}
+
+  \PYG{n}{dtmax} \PYG{o}{=} \PYG{n}{DT}\PYG{p}{;}
+  \PYG{n}{event} \PYG{p}{(}\PYG{l+s}{\PYGZdq{}stability\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Time integration}
+
+\PYG{c+cm}{The timestep for this iteration is controlled by the CFL condition,}
+\PYG{c+cm}{applied to the face centered velocity field $\mathbf{u}_f$; and the}
+\PYG{c+cm}{timing of upcoming events. */}
+
+\PYG{n}{event} \PYG{n+nf}{set\PYGZus{}dtmax} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)} \PYG{n}{dtmax} \PYG{o}{=} \PYG{n}{DT}\PYG{p}{;}
+
+\PYG{n}{event} \PYG{n+nf}{stability} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{n}{dt} \PYG{o}{=} \PYG{n}{dtnext} \PYG{p}{(}\PYG{n}{stokes} \PYG{o}{?} \PYG{n+nl}{dtmax} \PYG{p}{:} \PYG{n}{timestep} \PYG{p}{(}\PYG{n}{uf}\PYG{p}{,} \PYG{n}{dtmax}\PYG{p}{));}\PYG{c+c1}{//根据限制条件设置最大时间步}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{If we are using VOF or diffuse tracers, we need to advance them (to}
+\PYG{c+cm}{time $t+\Delta t/2$) here. Note that this assumes that tracer fields}
+\PYG{c+cm}{are defined at time $t-\Delta t/2$ i.e. are lagging the}
+\PYG{c+cm}{velocity/pressure fields by half a timestep. */}
+\PYG{c+c1}{//说明：为了与u形成时间上的交错，初始各参数均被假定在\PYGZhy{}Delta t/2时刻，（p应该也应是被假定在\PYGZhy{}Delta t/2时刻？）}
+
+\PYG{n}{event} \PYG{n+nf}{vof} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{);}
+\PYG{n}{event} \PYG{n+nf}{tracer\PYGZus{}advection} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{);}
+\PYG{n}{event} \PYG{n+nf}{tracer\PYGZus{}diffusion} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{);}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The fluid properties such as specific volume (fields $\alpha$ and}
+\PYG{c+cm}{$\alpha_c$) or dynamic viscosity (face field $\mu_f$) \PYGZhy{}\PYGZhy{} at time}
+\PYG{c+cm}{$t+\Delta t/2$ \PYGZhy{}\PYGZhy{} can be defined by overloading this event. */}
+
+\PYG{n}{event} \PYG{n+nf}{properties} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{);}
+\end{Verbatim}

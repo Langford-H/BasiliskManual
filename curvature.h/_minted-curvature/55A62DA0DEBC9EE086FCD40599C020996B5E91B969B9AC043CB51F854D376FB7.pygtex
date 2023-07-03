@@ -1,0 +1,54 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+
+\PYG{c+cm}{If *add* is *true*, the position is added to *pos*. */}
+
+\PYG{k}{struct} \PYG{n}{Position} \PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{f}\PYG{p}{,} \PYG{n}{pos}\PYG{p}{;}\PYG{c+c1}{//注意在这里pos已经是场量了}
+  \PYG{n}{coord} \PYG{n}{G}\PYG{p}{,} \PYG{n}{Z}\PYG{p}{;}
+  \PYG{k+kt}{bool} \PYG{n}{add}\PYG{p}{;}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{k+kt}{void} \PYG{n+nf}{position} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Position} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{f} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{f}\PYG{p}{,} \PYG{n}{pos} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{pos}\PYG{p}{;}\PYG{c+c1}{//最终的计算结果将会添加到pos中}
+  \PYG{n}{coord} \PYG{o}{*} \PYG{n}{G} \PYG{o}{=} \PYG{o}{\PYGZam{}}\PYG{n}{p}\PYG{p}{.}\PYG{n}{G}\PYG{p}{,} \PYG{o}{*} \PYG{n}{Z} \PYG{o}{=} \PYG{o}{\PYGZam{}}\PYG{n}{p}\PYG{p}{.}\PYG{n}{Z}\PYG{p}{;}\PYG{c+c1}{//注意这里均是对地址的操作，在之后的代码中任何对f、pos的操作都是直接对结构体p中的相关项进行赋值操作}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  On trees we set the prolongation and restriction functions for}
+\PYG{c+cm}{  the position. */}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+  \PYG{n}{pos}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{pos}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{curvature\PYGZus{}prolongation}\PYG{p}{;}
+  \PYG{n}{pos}\PYG{p}{.}\PYG{n}{restriction} \PYG{o}{=} \PYG{n}{curvature\PYGZus{}restriction}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{k}{vector} \PYG{n}{fh} \PYG{o}{=} \PYG{n}{f}\PYG{p}{.}\PYG{n}{height}\PYG{p}{,} \PYG{n}{h} \PYG{o}{=} \PYG{n}{automatic} \PYG{p}{(}\PYG{n}{fh}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{fh}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)}
+    \PYG{n}{heights} \PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+  \PYG{n}{foreach}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{interfacial} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{f}\PYG{p}{))} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//如果网格是边界网格则进入该判断}
+      \PYG{k+kt}{double} \PYG{n}{hp} \PYG{o}{=} \PYG{n}{height\PYGZus{}position} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{f}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{G}\PYG{p}{,} \PYG{n}{Z}\PYG{p}{);}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{hp} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//进入该循环则意味着该网格是界面网格但fabs(height(h.x[])) \PYGZgt{} 1.}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{If the height function is not defined, we use the centroid of}
+\PYG{c+cm}{the reconstructed VOF interface. */}
+
+        \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{n}{mycs} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{f}\PYG{p}{),} \PYG{n}{o} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{n}{x}\PYG{p}{,}\PYG{n}{y}\PYG{p}{,}\PYG{n}{z}\PYG{p}{\PYGZcb{},} \PYG{n}{c}\PYG{p}{;}\PYG{c+c1}{//这里是定义一个数据类型为coord的n并在之后使用函数对其进行赋值}
+        \PYG{k+kt}{double} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{plane\PYGZus{}alpha} \PYG{p}{(}\PYG{n}{f}\PYG{p}{[],} \PYG{n}{n}\PYG{p}{);}
+        \PYG{n}{plane\PYGZus{}area\PYGZus{}center} \PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{c}\PYG{p}{);}
+        \PYG{n}{hp} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+        \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+          \PYG{n}{hp} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{o}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{Delta}\PYG{o}{*}\PYG{n}{c}\PYG{p}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{Z}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{G}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{x}\PYG{p}{;}
+      \PYG{p}{\PYGZcb{}}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{add}\PYG{p}{)}\PYG{c+c1}{//决定是否在原有网格值上进行相加还是直接覆盖}
+        \PYG{n}{pos}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{hp}\PYG{p}{;}
+      \PYG{k}{else}
+        \PYG{n}{pos}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{hp}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else}
+      \PYG{n}{pos}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

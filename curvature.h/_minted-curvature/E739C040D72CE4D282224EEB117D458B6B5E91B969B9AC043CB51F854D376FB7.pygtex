@@ -1,0 +1,31 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} General curvature computation}
+
+\PYG{c+cm}{We first need to define \PYGZdq{}interfacial cells\PYGZdq{} i.e. cells which contain}
+\PYG{c+cm}{an interface. A simple test would just be that the volume fraction is}
+\PYG{c+cm}{neither zero nor one. As usual things are more complicated because of}
+\PYG{c+cm}{round\PYGZhy{}off errors. They can cause the interface to be exactly aligned}
+\PYG{c+cm}{with cell boundaries, so that cells on either side of this interface}
+\PYG{c+cm}{have fractions exactly equal to zero or one. The function below takes}
+\PYG{c+cm}{this into account. */}
+
+\PYG{k}{static} \PYG{k+kr}{inline} \PYG{k+kt}{bool} \PYG{n+nf}{interfacial} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+=} \PYG{l+m+mi}{2}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.}\PYG{p}{)}\PYG{c+c1}{//只要有一个方向上的体积分数值越过界面为零，那么就认为该网格就是界面网格}
+          \PYG{k}{return} \PYG{n+nb}{true}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+=} \PYG{l+m+mi}{2}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)}
+          \PYG{k}{return} \PYG{n+nb}{true}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{else} \PYG{c+c1}{// c[] \PYGZgt{} 0. \PYGZam{}\PYGZam{} c[] \PYGZlt{} 1.}
+    \PYG{k}{return} \PYG{n+nb}{true}\PYG{p}{;}
+  \PYG{k}{return} \PYG{n+nb}{false}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}\PYG{c+c1}{//该函数的创建目的就是为了防止界面与网格界面完全重合，导致并没有网格体积分数在0，1之间但依旧是界面网格}
+\end{Verbatim}

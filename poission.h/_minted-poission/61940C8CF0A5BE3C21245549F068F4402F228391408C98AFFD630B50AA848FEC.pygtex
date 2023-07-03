@@ -1,0 +1,87 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{mgstats} \PYG{n+nf}{mg\PYGZus{}solve} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{MGSolve} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{c+c1}{//根据输入数据格式的$a$分配修正数据的指针，即保证$da$与其有相同的分布与边界条件}
+  \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{da} \PYG{o}{=} \PYG{n}{list\PYGZus{}clone} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{),} \PYG{o}{*} \PYG{n}{res} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{res}\PYG{p}{;}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{res}\PYG{p}{)}
+    \PYG{n}{res} \PYG{o}{=} \PYG{n}{list\PYGZus{}clone} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{b}\PYG{p}{);}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  The boundary conditions for the correction fields are the}
+\PYG{c+cm}{  *homogeneous* equivalent of the boundary conditions applied to}
+\PYG{c+cm}{  *a*. */}
+
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{b} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{b} \PYG{o}{\PYGZlt{}} \PYG{n}{nboundary}\PYG{p}{;} \PYG{n}{b}\PYG{o}{++}\PYG{p}{)}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{n}{da}\PYG{p}{)}
+      \PYG{n}{s}\PYG{p}{.}\PYG{n}{boundary}\PYG{p}{[}\PYG{n}{b}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{boundary\PYGZus{}homogeneous}\PYG{p}{[}\PYG{n}{b}\PYG{p}{];}
+
+  \PYG{c+c1}{// $s$即为要返回的mgstats型数据，先对其进行初始化}
+  \PYG{n}{mgstats} \PYG{n}{s} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{};}
+  \PYG{k+kt}{double} \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{sum}\PYG{p}{))}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{n}{p}\PYG{p}{.}\PYG{n}{b}\PYG{p}{)}
+      \PYG{n}{sum} \PYG{o}{+=} \PYG{n}{s}\PYG{p}{[];}
+  \PYG{n}{s}\PYG{p}{.}\PYG{n}{sum} \PYG{o}{=} \PYG{n}{sum}\PYG{p}{;}\PYG{c+c1}{//对等式右端（r.h.s.）进行赋值}
+  \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{nrelax} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0} \PYG{o}{?} \PYG{n}{p}\PYG{p}{.}\PYG{n+nl}{nrelax} \PYG{p}{:} \PYG{l+m+mi}{4}\PYG{p}{;}\PYG{c+c1}{//默认的$\mathscr{R}$迭代次数为4，如果自带则使用自带参数}
+
+  \PYG{c+c1}{//使用residual函数计算该计算域内最大残差并赋值}
+  \PYG{k+kt}{double} \PYG{n}{resb}\PYG{p}{;}
+  \PYG{n}{resb} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{resb} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{residual} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{b}\PYG{p}{,} \PYG{n}{res}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{data}\PYG{p}{);}
+
+  \PYG{c+c1}{//设定残差判定的默认值}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance} \PYG{o}{==} \PYG{l+m+mf}{0.}\PYG{p}{)}
+    \PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance} \PYG{o}{=} \PYG{n}{TOLERANCE}\PYG{p}{;}
+
+  \PYG{c+c1}{//开始进入算法中的while循环}
+  \PYG{k}{for} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+       \PYG{n}{s}\PYG{p}{.}\PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{NITERMAX} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{NITERMIN} \PYG{o}{||} \PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZgt{}} \PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{);}
+       \PYG{n}{s}\PYG{p}{.}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{c+c1}{//引用mg cycle函数，开始进入Jacobi迭代循环}
+    \PYG{n}{mg\PYGZus{}cycle} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{,} \PYG{n}{res}\PYG{p}{,} \PYG{n}{da}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{relax}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{data}\PYG{p}{,}
+          \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{,}
+          \PYG{n}{p}\PYG{p}{.}\PYG{n}{minlevel}\PYG{p}{,}
+          \PYG{n}{grid}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{maxdepth}\PYG{p}{);}
+
+    \PYG{c+c1}{//再次计算残差，用于判断}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{residual} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{b}\PYG{p}{,} \PYG{n}{res}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{data}\PYG{p}{);}
+
+\PYG{c+c1}{//进入对Jacobi迭代次数的调整}
+\PYG{c+cp}{\PYGZsh{}if 1}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZgt{}} \PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{resb}\PYG{o}{/}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1.2} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{100}\PYG{p}{)}\PYG{c+c1}{//如果在经历迭代后的残差$R_a$与迭代前的残差$R_b$之比小于1.2，则扩大迭代次数}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax}\PYG{o}{++}\PYG{p}{;}
+      \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{resb}\PYG{o}{/}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{10} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{c+c1}{//如果残差收敛效果好，则适当减少迭代次数，加速计算}
+    \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+\PYG{c+cp}{\PYGZsh{}else}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{==} \PYG{n}{resb}\PYG{p}{)} \PYG{c+cm}{/* convergence has stopped!! */}
+      \PYG{k}{break}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZgt{}} \PYG{n}{resb}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{p}\PYG{p}{.}\PYG{n}{minlevel} \PYG{o}{\PYGZlt{}} \PYG{n}{grid}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{maxdepth}\PYG{p}{)}
+      \PYG{n}{p}\PYG{p}{.}\PYG{n}{minlevel}\PYG{o}{++}\PYG{p}{;}\PYG{c+c1}{//如果迭代效果不理想，且网格密度大于迭代过程中的最小网格级别，则抬高该级别}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+    \PYG{n}{resb} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{resa}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}\PYG{c+c1}{//while循环终止处}
+  \PYG{n}{s}\PYG{p}{.}\PYG{n}{minlevel} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{minlevel}\PYG{p}{;}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  If we have not satisfied the tolerance, we warn the user. */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{resa} \PYG{o}{\PYGZgt{}} \PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{scalar} \PYG{n}{v} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{];}
+    \PYG{n}{fprintf} \PYG{p}{(}\PYG{n}{ferr}\PYG{p}{,}
+         \PYG{l+s}{\PYGZdq{}WARNING: convergence for \PYGZpc{}s not reached after \PYGZpc{}d iterations}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}
+         \PYG{l+s}{\PYGZdq{}  res: \PYGZpc{}g sum: \PYGZpc{}g nrelax: \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{v}\PYG{p}{.}\PYG{n}{name}\PYG{p}{,}
+         \PYG{n}{s}\PYG{p}{.}\PYG{n}{i}\PYG{p}{,} \PYG{n}{s}\PYG{p}{.}\PYG{n}{resa}\PYG{p}{,} \PYG{n}{s}\PYG{p}{.}\PYG{n}{sum}\PYG{p}{,} \PYG{n}{s}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{),} \PYG{n}{fflush} \PYG{p}{(}\PYG{n}{ferr}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}}\PYG{c+c1}{//在数次循环后依旧无法满足判定标准，而是达到最大循环次数才实现跳脱循环，则需要向标准输出端发出警告。}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We deallocate the residual and correction fields and free the lists. */}
+  \PYG{c+c1}{//清除栈}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{p}\PYG{p}{.}\PYG{n}{res}\PYG{p}{)}
+    \PYG{n}{delete} \PYG{p}{(}\PYG{n}{res}\PYG{p}{),} \PYG{n}{free} \PYG{p}{(}\PYG{n}{res}\PYG{p}{);}
+  \PYG{n}{delete} \PYG{p}{(}\PYG{n}{da}\PYG{p}{),} \PYG{n}{free} \PYG{p}{(}\PYG{n}{da}\PYG{p}{);}
+
+  \PYG{k}{return} \PYG{n}{s}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

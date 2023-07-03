@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kt}{void} \PYG{n+nf}{mg\PYGZus{}cycle} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{da}\PYG{p}{,}
+           \PYG{k+kt}{void} \PYG{p}{(}\PYG{o}{*} \PYG{n}{relax}\PYG{p}{)} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{da}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{,}
+                \PYG{k+kt}{int} \PYG{n}{depth}\PYG{p}{,} \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{),}
+           \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{,}
+           \PYG{k+kt}{int} \PYG{n}{nrelax}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{minlevel}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{maxlevel}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{restriction} \PYG{p}{(}\PYG{n}{res}\PYG{p}{);}\PYG{c+c1}{//利用平均计算每一层级网格上残差值}
+
+  \PYG{c+c1}{//从最低的网格密度层级开始对相应的计算区域进行Jacobi迭代}
+  \PYG{n}{minlevel} \PYG{o}{=} \PYG{n}{min} \PYG{p}{(}\PYG{n}{minlevel}\PYG{p}{,} \PYG{n}{maxlevel}\PYG{p}{);}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{l} \PYG{o}{=} \PYG{n}{minlevel}\PYG{p}{;} \PYG{n}{l} \PYG{o}{\PYGZlt{}=} \PYG{n}{maxlevel}\PYG{p}{;} \PYG{n}{l}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{l} \PYG{o}{==} \PYG{n}{minlevel}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}level\PYGZus{}or\PYGZus{}leaf} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)}\PYG{c+c1}{//对当前级别网格，或小于l级但已经是leaf的网格进行遍历}
+        \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{n}{da}\PYG{p}{)}
+            \PYG{n}{foreach\PYGZus{}blockf} \PYG{p}{(}\PYG{n}{s}\PYG{p}{)}\PYG{c+c1}{//默认在common.h中定义为空，具体定义在grid/layers.h中，用法应该与存储数据方式相关，用于快速遍历内存上值，测验后发现其存在对结果并没有影响}
+                \PYG{n}{s}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{k}{else}
+      \PYG{n}{foreach\PYGZus{}level} \PYG{p}{(}\PYG{n}{l}\PYG{p}{)}
+        \PYG{k}{for} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{s} \PYG{n}{in} \PYG{n}{da}\PYG{p}{)}
+            \PYG{n}{foreach\PYGZus{}blockf} \PYG{p}{(}\PYG{n}{s}\PYG{p}{)}
+                \PYG{n}{s}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{bilinear} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{s}\PYG{p}{);}
+    \PYG{c+c1}{//在轮到$l$级网格时，由于网格加密导致网格中心位置变动，需要对上一级中求出的$da$进行插值，并将其作为本轮Jacobi迭代的初始值}
+
+    \PYG{n}{boundary\PYGZus{}level} \PYG{p}{(}\PYG{n}{da}\PYG{p}{,} \PYG{n}{l}\PYG{p}{);}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{nrelax}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{relax} \PYG{p}{(}\PYG{n}{da}\PYG{p}{,} \PYG{n}{res}\PYG{p}{,} \PYG{n}{l}\PYG{p}{,} \PYG{n}{data}\PYG{p}{);} \PYG{c+c1}{//利用$\mathscr{R}$函数进行Jacobi迭代，迭代次数为输入值nrelax，该数值在后面会视情况而改变。}
+      \PYG{n}{boundary\PYGZus{}level} \PYG{p}{(}\PYG{n}{da}\PYG{p}{,} \PYG{n}{l}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{n}{foreach}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k}{scalar} \PYG{n}{s}\PYG{p}{,} \PYG{n}{ds}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{s}\PYG{p}{,} \PYG{n}{ds} \PYG{n}{in} \PYG{n}{a}\PYG{p}{,} \PYG{n}{da}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}blockf} \PYG{p}{(}\PYG{n}{s}\PYG{p}{)}
+        \PYG{n}{s}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{ds}\PYG{p}{[];}\PYG{c+c1}{//更新最密网格中的目标数值$a$}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

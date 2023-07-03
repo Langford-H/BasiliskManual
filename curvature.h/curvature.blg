@@ -1,0 +1,9 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'curvature.blg'
+[30] biber:322> INFO - === 一 7月  3, 2023, 14:42:04
+[36] Biber.pm:415> INFO - Reading 'curvature.bcf'
+[62] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
+[64] Utils.pm:293> WARN - The file 'curvature.bcf' does not contain any citations!
+[67] bbl.pm:652> INFO - Writing 'curvature.bbl' with encoding 'UTF-8'
+[67] bbl.pm:755> INFO - Output to curvature.bbl
+[67] Biber.pm:128> INFO - WARNINGS: 1

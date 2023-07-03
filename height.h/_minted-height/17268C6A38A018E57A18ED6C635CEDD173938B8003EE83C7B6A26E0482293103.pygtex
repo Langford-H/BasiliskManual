@@ -1,0 +1,22 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Column propagation}
+
+\PYG{c+cm}{Once columns are computed on a local 9\PYGZhy{}cells\PYGZhy{}high stencil, we will}
+\PYG{c+cm}{need to \PYGZdq{}propagate\PYGZdq{} these values upward or downward so that they are}
+\PYG{c+cm}{accessible at distances of up to 5.5 cells from the interface. This is}
+\PYG{c+cm}{important in 3D in particular where marginal (\PYGZti{}45 degrees) cases may}
+\PYG{c+cm}{require such high stencils to compute consistent HF curvatures. We do}
+\PYG{c+cm}{this by selecting the smallest height in a 5\PYGZhy{}cells neighborhood along}
+\PYG{c+cm}{each direction. */}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{column\PYGZus{}propagation} \PYG{p}{(}\PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{serial}\PYG{p}{)} \PYG{c+c1}{// not compatible with OpenMP}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{2}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+          \PYG{k}{if} \PYG{p}{(}\PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]))} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{3.5} \PYG{o}{\PYGZam{}\PYGZam{}}
+          \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])} \PYG{o}{+} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[])))}\PYG{c+c1}{//该函数目的是保证远端靠近界面的nodata型被赋值}
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{i}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

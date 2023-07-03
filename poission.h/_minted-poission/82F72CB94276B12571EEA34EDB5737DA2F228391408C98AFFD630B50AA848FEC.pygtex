@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{struct} \PYG{n}{Poisson} \PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{a}\PYG{p}{,} \PYG{n}{b}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{n}{face} \PYG{k}{vector} \PYG{n}{alpha}\PYG{p}{;}
+  \PYG{p}{(}\PYG{k}{const}\PYG{p}{)} \PYG{k}{scalar} \PYG{n}{lambda}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{tolerance}\PYG{p}{;}
+  \PYG{k+kt}{int} \PYG{n}{nrelax}\PYG{p}{,} \PYG{n}{minlevel}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+  \PYG{k+kt}{double} \PYG{p}{(}\PYG{o}{*} \PYG{n}{embed\PYGZus{}flux}\PYG{p}{)} \PYG{p}{(}\PYG{n}{Point}\PYG{p}{,} \PYG{k}{scalar}\PYG{p}{,} \PYG{k}{vector}\PYG{p}{,} \PYG{k+kt}{double} \PYG{o}{*}\PYG{p}{);}
+\PYG{c+cp}{\PYGZsh{}endif}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

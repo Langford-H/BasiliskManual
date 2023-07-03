@@ -1,0 +1,114 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The function below computes the mean curvature *kappa* of the}
+\PYG{c+cm}{interface defined by the volume fraction *c*. It uses a combination of}
+\PYG{c+cm}{the methods above: statistics on the number of curvatures computed}
+\PYG{c+cm}{which each method is returned in a *cstats* data structure.}
+
+\PYG{c+cm}{If *sigma* is different from zero the curvature is multiplied by *sigma*.}
+
+\PYG{c+cm}{If *add* is *true*, the curvature (optionally multiplied by *sigma*)}
+\PYG{c+cm}{is added to field *kappa*. */}
+
+\PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{int} \PYG{n}{h}\PYG{p}{;} \PYG{c+c1}{// number of standard HF curvatures}
+  \PYG{k+kt}{int} \PYG{n}{f}\PYG{p}{;} \PYG{c+c1}{// number of parabolic fit HF curvatures}
+  \PYG{k+kt}{int} \PYG{n}{a}\PYG{p}{;} \PYG{c+c1}{// number of averaged curvatures}
+  \PYG{k+kt}{int} \PYG{n}{c}\PYG{p}{;} \PYG{c+c1}{// number of centroids fit curvatures}
+\PYG{p}{\PYGZcb{}} \PYG{n}{cstats}\PYG{p}{;}
+
+\PYG{k}{struct} \PYG{n}{Curvature} \PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{n}{kappa}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{sigma}\PYG{p}{;}
+  \PYG{k+kt}{bool} \PYG{n}{add}\PYG{p}{;}
+\PYG{p}{\PYGZcb{};}
+
+\PYG{n}{trace}
+\PYG{n}{cstats} \PYG{n+nf}{curvature} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Curvature} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{n}{c} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{c}\PYG{p}{,} \PYG{n}{kappa} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{kappa}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{sigma} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{sigma} \PYG{o}{?} \PYG{n}{p}\PYG{p}{.}\PYG{n+nl}{sigma} \PYG{p}{:} \PYG{l+m+mf}{1.}\PYG{p}{;}
+  \PYG{k+kt}{int} \PYG{n}{sh} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{sf} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{sa} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{sc} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+  \PYG{k}{vector} \PYG{n}{ch} \PYG{o}{=} \PYG{n}{c}\PYG{p}{.}\PYG{n}{height}\PYG{p}{,} \PYG{n}{h} \PYG{o}{=} \PYG{n}{automatic} \PYG{p}{(}\PYG{n}{ch}\PYG{p}{);}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{ch}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)}
+    \PYG{n}{heights} \PYG{p}{(}\PYG{n}{c}\PYG{p}{,} \PYG{n}{h}\PYG{p}{);}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  On trees we set the prolongation and restriction functions for}
+\PYG{c+cm}{  the curvature. */}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+  \PYG{n}{kappa}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{kappa}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{curvature\PYGZus{}prolongation}\PYG{p}{;}
+  \PYG{n}{kappa}\PYG{p}{.}\PYG{n}{restriction} \PYG{o}{=} \PYG{n}{curvature\PYGZus{}restriction}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We first compute a temporary curvature *k*: a \PYGZdq{}clone\PYGZdq{} of}
+\PYG{c+cm}{  $\kappa$. */}
+
+  \PYG{k}{scalar} \PYG{n}{k}\PYG{p}{[];}
+  \PYG{n}{scalar\PYGZus{}clone} \PYG{p}{(}\PYG{n}{k}\PYG{p}{,} \PYG{n}{kappa}\PYG{p}{);}
+
+  \PYG{n}{foreach}\PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{sh}\PYG{p}{)} \PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{sf}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    If we are not in an interfacial cell, we set $\kappa$ to *nodata*. */}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{interfacial} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{))}
+      \PYG{n}{k}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    Otherwise we try the standard HF curvature calculation first, and}
+\PYG{c+cm}{    the \PYGZdq{}mixed heights\PYGZdq{} HF curvature second. */}
+
+    \PYG{k}{else} \PYG{k}{if} \PYG{p}{((}\PYG{n}{k}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{height\PYGZus{}curvature} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{,} \PYG{n}{h}\PYG{p}{))} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)}\PYG{c+c1}{//也就意味着有且仅有界面单元才会被赋予曲率，否则不会有相应的kappa值}
+      \PYG{n}{sh}\PYG{o}{++}\PYG{p}{;}
+    \PYG{k}{else} \PYG{k}{if} \PYG{p}{((}\PYG{n}{k}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{height\PYGZus{}curvature\PYGZus{}fit} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{,} \PYG{n}{h}\PYG{p}{))} \PYG{o}{!=} \PYG{n}{nodata}\PYG{p}{)}\PYG{c+c1}{//直接使用曲率计算公式计算失败，转为使用height函数值进行拟合}
+      \PYG{n}{sf}\PYG{o}{++}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{sa}\PYG{p}{)} \PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{sc}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    We then construct the final curvature field using either the}
+\PYG{c+cm}{    computed temporary curvature... */}
+
+    \PYG{k+kt}{double} \PYG{n}{kf}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{k}\PYG{p}{[]} \PYG{o}{\PYGZlt{}} \PYG{n}{nodata}\PYG{p}{)}\PYG{c+c1}{//已经计算出kappa了}
+      \PYG{n}{kf} \PYG{o}{=} \PYG{n}{k}\PYG{p}{[];}
+    \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{interfacial} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{))} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//进入该循环的条件就是即没有曲率值，但是又存在于界面上，那就说明上一个函数中的两种曲率计算已经失败了}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{      ...or the average of the curvatures in the $3^{d}$ neighborhood}
+\PYG{c+cm}{      of interfacial cells. */}
+
+      \PYG{k+kt}{double} \PYG{n}{sk} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{n}{a} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+      \PYG{n}{foreach\PYGZus{}neighbor}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{c+c1}{//循环遍历每个方向正负的网格单位}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{k}\PYG{p}{[]} \PYG{o}{\PYGZlt{}} \PYG{n}{nodata}\PYG{p}{)}
+          \PYG{n}{sk} \PYG{o}{+=} \PYG{n}{k}\PYG{p}{[],} \PYG{n}{a}\PYG{o}{++}\PYG{p}{;}
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{a} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.}\PYG{p}{)}\PYG{c+c1}{//如果周围有网格成功通过计算得出了相应的曲率值，那么就直接取相应网格上的曲率平均}
+        \PYG{n}{kf} \PYG{o}{=} \PYG{n}{sk}\PYG{o}{/}\PYG{n}{a}\PYG{p}{,} \PYG{n}{sa}\PYG{o}{++}\PYG{p}{;}
+      \PYG{k}{else}
+
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{I}\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZca{}\PYGZca{}IEmpty neighborhood: we try centroids as a last resort. */}
+
+        \PYG{n}{kf} \PYG{o}{=} \PYG{n}{centroids\PYGZus{}curvature\PYGZus{}fit} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{),} \PYG{n}{sc}\PYG{o}{++}\PYG{p}{;}\PYG{c+c1}{//而如果连周围网格都没有曲率计算成功，那么就只能使用网格中心拟合了}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else}
+      \PYG{n}{kf} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    We add or set *kappa*. */}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{kf} \PYG{o}{==} \PYG{n}{nodata}\PYG{p}{)}
+      \PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+    \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{add}\PYG{p}{)}
+      \PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{sigma}\PYG{o}{*}\PYG{n}{kf}\PYG{p}{;}
+    \PYG{k}{else}
+      \PYG{n}{kappa}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{sigma}\PYG{o}{*}\PYG{n}{kf}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{k}{return} \PYG{p}{(}\PYG{n}{cstats}\PYG{p}{)\PYGZob{}}\PYG{n}{sh}\PYG{p}{,} \PYG{n}{sf}\PYG{p}{,} \PYG{n}{sa}\PYG{p}{,} \PYG{n}{sc}\PYG{p}{\PYGZcb{};}\PYG{c+c1}{//返回量是cstats型数据，其中包含用不同方式计算曲率的网格个数，sh直接定义计算（最高精度），sf通过height值进行拟合，sa通过周围网格进行平均，sc直接通过周边网格的不同相含量}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

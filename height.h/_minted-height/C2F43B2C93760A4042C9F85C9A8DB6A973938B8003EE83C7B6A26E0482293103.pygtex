@@ -1,0 +1,274 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{} Height\PYGZhy{}Functions}
+
+\PYG{c+cm}{The \PYGZdq{}height\PYGZhy{}function\PYGZdq{} is a vector field which gives the distance,}
+\PYG{c+cm}{along each coordinate axis, from the center of the cell to the closest}
+\PYG{c+cm}{interface defined by a volume fraction field. This distance is}
+\PYG{c+cm}{estimated using the \PYGZdq{}column integral\PYGZdq{} of the volume fraction in the}
+\PYG{c+cm}{corresponding direction. This integral is not always defined (for}
+\PYG{c+cm}{example because the interface is too far i.e. farther than 5.5 cells}
+\PYG{c+cm}{in our implementation) in which case the value of the field is set to}
+\PYG{c+cm}{*nodata*. See e.g. [Popinet, 2009](references.bib\PYGZsh{}popinet2009) for}
+\PYG{c+cm}{more details on height functions.}
+
+\PYG{c+cm}{We also store the \PYGZdq{}orientation\PYGZdq{} of the height function together with}
+\PYG{c+cm}{its value by adding *HSHIFT* if the volume fraction is unity on the}
+\PYG{c+cm}{\PYGZdq{}top\PYGZdq{} end. The function below applied to the value will return the}
+\PYG{c+cm}{corresponding height and orientation.}
+
+\PYG{c+cm}{The distance is normalised with the cell size so that the coordinates}
+\PYG{c+cm}{of the interface are given by}
+
+\PYG{c+cm}{\PYGZti{}\PYGZti{}\PYGZti{}c}
+\PYG{c+cm}{(x, y + Delta*height(h.y[])) or (x + Delta*height(h.x[]), y)}
+\PYG{c+cm}{\PYGZti{}\PYGZti{}\PYGZti{}}
+\PYG{c+cm}{*/}
+
+\PYG{c+cp}{\PYGZsh{}define HSHIFT 20.}\PYG{c+c1}{//区分正方向}
+
+\PYG{k}{static} \PYG{k+kr}{inline} \PYG{k+kt}{double} \PYG{n+nf}{height} \PYG{p}{(}\PYG{k+kt}{double} \PYG{n}{H}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//内联函数，通过文本替换的方式减少函数内存的调用}
+  \PYG{k}{return} \PYG{n}{H} \PYG{o}{\PYGZgt{}} \PYG{n}{HSHIFT}\PYG{o}{/}\PYG{l+m+mf}{2.} \PYG{o}{?} \PYG{n}{H} \PYG{o}{\PYGZhy{}} \PYG{n+nl}{HSHIFT} \PYG{p}{:} \PYG{n}{H} \PYG{o}{\PYGZlt{}} \PYG{o}{\PYGZhy{}}\PYG{n}{HSHIFT}\PYG{o}{/}\PYG{l+m+mf}{2.} \PYG{o}{?} \PYG{n}{H} \PYG{o}{+} \PYG{n+nl}{HSHIFT} \PYG{p}{:} \PYG{n}{H}\PYG{p}{;}\PYG{c+c1}{//先行判断H是否大于HSHIFT/2.再以此类推}
+\PYG{p}{\PYGZcb{}}\PYG{c+c1}{//本函数的作用是规范高度值，将其完美限定在[\PYGZhy{}10,10]之间}
+
+\PYG{k}{static} \PYG{k+kr}{inline} \PYG{k+kt}{int} \PYG{n+nf}{orientation} \PYG{p}{(}\PYG{k+kt}{double} \PYG{n}{H}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{k}{return} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{H}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{n}{HSHIFT}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{We make sure that two layers of ghost cells are defined on the}
+\PYG{c+cm}{boundaries (the default is one layer). */}
+
+\PYG{c+cp}{\PYGZsh{}define BGHOSTS 2}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Half\PYGZhy{}column integration}
+
+\PYG{c+cm}{This helper function performs the integration on half a column, either}
+\PYG{c+cm}{\PYGZdq{}downward\PYGZdq{} (*j = \PYGZhy{}1*) or \PYGZdq{}upward\PYGZdq{} (*j = 1*). */}
+\PYG{c+c1}{//计算从本网格往一个方向延伸4个网格范围内的高度函数值，初始界面网格中高度函数参考值为20，延伸两侧分别递增和递减，本函数为一个工具函数}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{half\PYGZus{}column} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{cs}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{j}\PYG{p}{)}\PYG{c+c1}{//h是指针，需要填充操作}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  The \PYGZsq{}state\PYGZsq{} of the height function can be: *complete* if both}
+\PYG{c+cm}{  ends were found, zero or one if one end was found and between zero}
+\PYG{c+cm}{  and one if only the interface was found. */}
+
+  \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{complete} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;}
+
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//注意其计算了各个方向的高度函数}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     *S* is the state and *H* the (partial) value of the height}
+\PYG{c+cm}{     function. If we are on the (first) downward integration (*j =}
+\PYG{c+cm}{     \PYGZhy{}1*) we initialise *S* and *H* with the volume fraction in}
+\PYG{c+cm}{     the current cell. */}
+
+    \PYG{k+kt}{double} \PYG{n}{S} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[],} \PYG{n}{H} \PYG{o}{=} \PYG{n}{S}\PYG{p}{,} \PYG{n}{ci}\PYG{p}{,} \PYG{n}{a}\PYG{p}{;}
+    \PYG{c+c1}{//需要提醒的是在每一次j的数值变化后，S，H将会被归零}
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     On the upward integration (*j = 1*), we recover the state of the}
+\PYG{c+cm}{     downward integration. Both the state and the (possibly partial)}
+\PYG{c+cm}{     height value are encoded in a single number using a base 100}
+\PYG{c+cm}{     shift for the state. */}
+
+    \PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}} \PYG{k+kt}{int} \PYG{n}{s}\PYG{p}{;} \PYG{k+kt}{double} \PYG{n}{h}\PYG{p}{;} \PYG{p}{\PYGZcb{}} \PYG{n}{HState}\PYG{p}{;}
+    \PYG{n}{HState} \PYG{n}{state} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{\PYGZcb{};}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{j} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//在调用本函数时，j的初始值被设定为\PYGZhy{}1，所以阅读时请从\PYGZhy{}1看起}
+    \PYG{c+cm}{/*在第二次循环（j==1）时会进入本判断语句，本段代码的主要作用就是设置表示当前循环状态的S值。}
+\PYG{c+cm}{    当上一个循环完整通过界面后，h.x[]会被赋值为小于25的数值（这取决于其方向），是故在接下来的判断操作中，int s会取为0，S则被设定为\PYGZhy{}1，代表已经完成循环。}
+\PYG{c+cm}{    当上一个循环没有找到界面或没有通过界面一端；}
+\PYG{c+cm}{    即向负方向循环遍历后并没有}
+\PYG{c+cm}{    1.初始位置$1\geq c>0$，然而在负方向循环上没有出现$c[]=1$或$c[]=0$}
+\PYG{c+cm}{    2.初始位置$c[]=1$或$c[]=0$在负方向循环上没有出现$c[]=0$或$c=1$}
+\PYG{c+cm}{    S会保持为c[]向另一个方向进行遍历，以求得通过界面获得定义，而在此之前state.s会被提前设置为\PYGZhy{}1，state,h会被提前设置为nodata。}
+\PYG{c+cm}{    而当初始单元处于界面上即$1\geq c>0$在负方向循环中找到单元$c[]=1$或$c[]=0$此时S则会被赋值为1或0，表示已经完整一半，并记录方向*/}
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{      Check whether this is an inconsistent height. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{==} \PYG{l+m+mf}{300.}\PYG{p}{)}\PYG{c+c1}{//inconsistent}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{I}        \PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{=} \PYG{n}{complete}\PYG{p}{,} \PYG{n}{state}\PYG{p}{.}\PYG{n}{h} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}\PYG{c+c1}{//nodata就意味着没有找到边界，或者无法定义}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{      Otherwise, this is either a complete or a partial height. */}
+
+      \PYG{k}{else} \PYG{p}{\PYGZob{}}
+            \PYG{k+kt}{int} \PYG{n}{s} \PYG{o}{=} \PYG{p}{(}\PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+} \PYG{n}{HSHIFT}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{100.}\PYG{p}{;}\PYG{c+c1}{//注意这里是int值，小数归零}
+            \PYG{n}{state}\PYG{p}{.}\PYG{n}{h} \PYG{o}{=} \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{100.}\PYG{o}{*}\PYG{n}{s}\PYG{p}{;}
+            \PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{=} \PYG{n}{s} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+      \PYG{p}{\PYGZcb{}}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{      If this is a complete height, we start a fresh upward}
+\PYG{c+cm}{      integration. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{!=} \PYG{n}{complete}\PYG{p}{)}
+            \PYG{n}{S} \PYG{o}{=} \PYG{n}{state}\PYG{p}{.}\PYG{n}{s}\PYG{p}{,} \PYG{n}{H} \PYG{o}{=} \PYG{n}{state}\PYG{p}{.}\PYG{n}{h}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     We consider the four neighboring cells of the half column, the}
+\PYG{c+cm}{     corresponding volume fraction *ci* is recovered either from the}
+\PYG{c+cm}{     standard volume fraction field *c* (first two cells) or from the}
+\PYG{c+cm}{     shifted field *cs* (last two cells). The construction of *cs* is}
+\PYG{c+cm}{     explained in the next section. */}
+
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{4}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//即开始对某一个方向上的单元进行循环，依次判定是否经过包含边界的单元，以及是否是填充/全空单元}
+      \PYG{n}{ci} \PYG{o}{=} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{2} \PYG{o}{?} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{o}{*}\PYG{n}{j}\PYG{p}{]} \PYG{o}{:} \PYG{n}{cs}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[(}\PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{*}\PYG{n}{j}\PYG{p}{];}\PYG{c+c1}{//cs即为下文heights函数中的s，cs[]为c[2*j]即向j方向移动两单元格后的体积分数值}
+      \PYG{n}{H} \PYG{o}{+=} \PYG{n}{ci}\PYG{p}{;}\PYG{c+c1}{//对高度函数进行累加}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       We then check whether the partial height is complete or not. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{S} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//即此时起始单元所处位置恰好在边界上}
+            \PYG{n}{S} \PYG{o}{=} \PYG{n}{ci}\PYG{p}{;}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{ci} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.} \PYG{o}{||} \PYG{n}{ci} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//若不能进入该循环，说明下一循环单元还是包含界面}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       We just left an interfacial cell (*S*) and found a full or}
+\PYG{c+cm}{       empty cell (*ci*): this is a partial height and we can stop}
+\PYG{c+cm}{       the integration. If the cell is full (*ci = 1*) we shift}
+\PYG{c+cm}{       the origin of the height. */}
+
+                \PYG{n}{H} \PYG{o}{\PYGZhy{}=} \PYG{n}{i}\PYG{o}{*}\PYG{n}{ci}\PYG{p}{;}\PYG{c+c1}{//将初始坐标定在界面内距离界面一格的地方}
+                \PYG{k}{break}\PYG{p}{;}
+            \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       If *S* is empty or full and *ci* is full or empty, we went}
+\PYG{c+cm}{       right through he interface i.e. the height is complete and}
+\PYG{c+cm}{       we can stop the integration. The origin is shifted}
+\PYG{c+cm}{       appropriately and the orientation is encoded using the \PYGZdq{}HSHIFT}
+\PYG{c+cm}{       trick\PYGZdq{}. */}
+
+      \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{ci} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//下两种用于判断起始单元位置在界面内/外，循环单元已变为完全界面外/内单元}
+            \PYG{n}{H} \PYG{o}{=} \PYG{p}{(}\PYG{n}{H} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{o}{*}\PYG{n}{j} \PYG{o}{+} \PYG{p}{(}\PYG{n}{j} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{HSHIFT}\PYG{p}{;}\PYG{c+c1}{//HSHIFT就是用来辨别处理方向的，当该判别启动时最终的H数值会增长畸变大于10}
+            \PYG{n}{S} \PYG{o}{=} \PYG{n}{complete}\PYG{p}{;}
+            \PYG{k}{break}\PYG{p}{;}
+      \PYG{p}{\PYGZcb{}}
+      \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{ci} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{p}{\PYGZob{}}\PYG{c+c1}{//此二者全部将状态设置为complete原因是成功通过了边界}
+            \PYG{n}{H} \PYG{o}{=} \PYG{p}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mf}{0.5} \PYG{o}{\PYGZhy{}} \PYG{n}{H}\PYG{p}{)}\PYG{o}{*}\PYG{n}{j} \PYG{o}{+} \PYG{p}{(}\PYG{n}{j} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{HSHIFT}\PYG{p}{;}
+            \PYG{n}{S} \PYG{o}{=} \PYG{n}{complete}\PYG{p}{;}
+            \PYG{k}{break}\PYG{p}{;}
+      \PYG{p}{\PYGZcb{}}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       If *ci* is identical to *S* (which is empty or full), we}
+\PYG{c+cm}{       check that *H* is an integer (i.e. its fractional value is}
+\PYG{c+cm}{       zero), otherwise we are in the case where we found an}
+\PYG{c+cm}{       interface but didn\PYGZsq{}t go through it: this is an}
+\PYG{c+cm}{       inconsistent height and we stop the integration. */}
+
+      \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{==} \PYG{n}{ci} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{modf}\PYG{p}{(}\PYG{n}{H}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{a}\PYG{p}{))}\PYG{c+c1}{//modf()的功能是提取double的整数与小数部分，因为如果经过的单元都是界面内或外，其H必定为整数，modf()必定为0，否则就是并没有完全穿透一个界面}
+            \PYG{k}{break}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{     We update the global state using the state *S* of the}
+\PYG{c+cm}{     half\PYGZhy{}integration. */}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{j} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       For the downward integration, we check that the partial heights}
+\PYG{c+cm}{       (*S != complete*) are consistent: if the first cell is full}
+\PYG{c+cm}{       or empty or if the last cell is interfacial, the partial}
+\PYG{c+cm}{       height is marked as inconsistent. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{!=} \PYG{n}{complete} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{((}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.} \PYG{o}{||} \PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{o}{||}
+            \PYG{p}{(}\PYG{n}{S} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{S} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1.}\PYG{p}{)))}
+            \PYG{c+cm}{/*当当前状态并非完成且（原始单元并非全满/全空或最终单元在界面上），根据上一循环，进入该判断条件的应该为}
+\PYG{c+cm}{            1.单元负方向循环过程中找到界面，但最终没有完整通过界面}
+\PYG{c+cm}{            2.在整个循环中单元全部保持$c[]=1$或$c[]=0$*/}
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{300.}\PYG{p}{;} \PYG{c+c1}{// inconsistent，一旦被赋此值，直接会认定为nodata}
+      \PYG{k}{else} \PYG{k}{if} \PYG{p}{(}\PYG{n}{S} \PYG{o}{==} \PYG{n}{complete}\PYG{p}{)}
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{H}\PYG{p}{;}
+      \PYG{k}{else}\PYG{c+c1}{//根据上一循环，有一种情况会进入该判断1.起始单元位于边界面上，循环单元完全离开边界面，此时S被赋值为循环单元值}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    This is a partial height: we encode the state using a base 100}
+\PYG{c+cm}{    shift. */}
+
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{H} \PYG{o}{+} \PYG{l+m+mf}{100.}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{p}{(}\PYG{n}{S} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{));}\PYG{c+c1}{//100加密操作，用于判断在该情况下S\PYGZgt{}=1是否成立，用于判断界面外向方向，若S\PYGZgt{}=1则说明其脱离界面进入界面内，界面方向与正方向相同，若不成立，则说明界面方向与正方向相反}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else} \PYG{p}{\PYGZob{}} \PYG{c+c1}{// j = 1}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       For the upward integration, we update the current *state*}
+\PYG{c+cm}{       using the state of the half\PYGZhy{}integration *S* only if the}
+\PYG{c+cm}{       first downward integration returned a partial height, or if}
+\PYG{c+cm}{       the upward integration returned a complete height with a}
+\PYG{c+cm}{       smaller value than the (complete) height of the downward}
+\PYG{c+cm}{       integration. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{!=} \PYG{n}{complete} \PYG{o}{||}
+      \PYG{p}{(}\PYG{n}{S} \PYG{o}{==} \PYG{n}{complete} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{H}\PYG{p}{))} \PYG{o}{\PYGZlt{}} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{height}\PYG{p}{(}\PYG{n}{state}\PYG{p}{.}\PYG{n}{h}\PYG{p}{))))}\PYG{c+c1}{//对于之前没有完成的情况，进行数据更新，其中第二个满足条件为在向负方向循环并没有找到界面，正方向循环后寻找到完整的界面}
+            \PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{=} \PYG{n}{S}\PYG{p}{,} \PYG{n}{state}\PYG{p}{.}\PYG{n}{h} \PYG{o}{=} \PYG{n}{H}\PYG{p}{;}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{       Finally, we set the vector field *h* using the state and}
+\PYG{c+cm}{       height. */}
+
+      \PYG{k}{if} \PYG{p}{(}\PYG{n}{state}\PYG{p}{.}\PYG{n}{s} \PYG{o}{!=} \PYG{n}{complete}\PYG{p}{)}\PYG{c+c1}{//即在正负方向上都没有找到两个端点}
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{nodata}\PYG{p}{;}
+      \PYG{k}{else}
+            \PYG{n}{h}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{state}\PYG{p}{.}\PYG{n}{h} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{1e10} \PYG{o}{?} \PYG{n+nl}{nodata} \PYG{p}{:} \PYG{n}{state}\PYG{p}{.}\PYG{n}{h}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Multigrid implementation}
+
+\PYG{c+cm}{The *heights()* function takes a volume fraction field *c* and returns}
+\PYG{c+cm}{the height function vector field *h*. */}
+\PYG{c+c1}{//计算网格4个网格范围内各个方向的高度函数}
+
+\PYG{c+cp}{\PYGZsh{}if !TREE}
+\PYG{n}{trace}
+\PYG{k+kt}{void} \PYG{n+nf}{heights} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{h}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We need a 9\PYGZhy{}points\PYGZhy{}high stencil (rather than the default}
+\PYG{c+cm}{  5\PYGZhy{}points). To do this we store in *s* the volume fraction field *c*}
+\PYG{c+cm}{  shifted by 2 grid points in the respective directions. We make sure}
+\PYG{c+cm}{  that this field uses the same boundary conditions as *c*. */}
+
+  \PYG{k}{vector} \PYG{n}{s}\PYG{p}{[];}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{nboundary}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+      \PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{boundary}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{.}\PYG{n}{boundary}\PYG{p}{[}\PYG{n}{i}\PYG{p}{];}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  To compute the height function, we sum the volume fractions in a}
+\PYG{c+cm}{  (half\PYGZhy{})column starting at the current cell. We start by integrating}
+\PYG{c+cm}{  downward (*j = \PYGZhy{}1*) and then integrate upward (*j = 1*). */}
+
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{j} \PYG{o}{+=} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    We first build the shifted (by $\pm 2$) volume fraction field in each}
+\PYG{c+cm}{    direction. */}
+
+    \PYG{n}{foreach}\PYG{p}{()}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+        \PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{j}\PYG{p}{];}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    We sum the half\PYGZhy{}column, downward or upward. We (exceptionally)}
+\PYG{c+cm}{    need to allow for stencil overflow. */}
+
+    \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{overflow}\PYG{p}{)}
+      \PYG{n}{half\PYGZus{}column} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{,} \PYG{n}{h}\PYG{p}{,} \PYG{n}{s}\PYG{p}{,} \PYG{n}{j}\PYG{p}{);}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  Finally we \PYGZdq{}propagate\PYGZdq{} values along columns. */}
+
+  \PYG{n}{column\PYGZus{}propagation} \PYG{p}{(}\PYG{n}{h}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

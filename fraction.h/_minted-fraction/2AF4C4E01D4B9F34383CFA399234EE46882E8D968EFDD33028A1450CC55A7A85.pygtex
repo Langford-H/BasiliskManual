@@ -1,0 +1,56 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Interface reconstruction}
+
+\PYG{c+cm}{The reconstruction function takes a volume fraction field `c` and}
+\PYG{c+cm}{returns the corresponding normal vector field `n` and intercept field}
+\PYG{c+cm}{$\alpha$. */}
+
+
+\PYG{n}{trace}
+\PYG{k+kt}{void} \PYG{n+nf}{reconstruction} \PYG{p}{(}\PYG{k}{const} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{k}{vector} \PYG{n}{n}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{alpha}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{foreach}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    If the cell is empty or full, we set $\mathbf{n}$ and $\alpha$ only to}
+\PYG{c+cm}{    avoid using uninitialised values in `alpha\PYGZus{}refine()`. */}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.} \PYG{o}{||} \PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{alpha}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+        \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{else} \PYG{p}{\PYGZob{}}
+
+      \PYG{c+cm}{/**}
+\PYG{c+cm}{      Otherwise, we compute the interface normal using the}
+\PYG{c+cm}{      Mixed\PYGZhy{}Youngs\PYGZhy{}Centered scheme, copy the result into the normal field}
+\PYG{c+cm}{      and compute the intercept $\alpha$ using our predefined function. */}
+
+      \PYG{n}{coord} \PYG{n}{m} \PYG{o}{=} \PYG{n}{interface\PYGZus{}normal} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{);}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{m}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}
+      \PYG{n}{alpha}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{plane\PYGZus{}alpha} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[],} \PYG{n}{m}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+  \PYG{p}{\PYGZcb{}}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  On a tree grid, for the normal to the interface, we don\PYGZsq{}t use}
+\PYG{c+cm}{  any interpolation from coarse to fine i.e. we use straight}
+\PYG{c+cm}{  \PYGZdq{}injection\PYGZdq{}. */}
+  \PYG{c+c1}{//在树状网格结构中，我们直接使用网格设定中自带的函数对网格细化改进进行定义}
+
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{refine\PYGZus{}injection}\PYG{p}{;}\PYG{c+c1}{//refine injection为一内联函数，其定义在于将取得的scalar型变量赋予本单元内所有的子单元}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We set our refinement function for *alpha*. */}
+
+  \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{n} \PYG{o}{=} \PYG{n}{n}\PYG{p}{;}
+  \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{refine} \PYG{o}{=} \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{prolongation} \PYG{o}{=} \PYG{n}{alpha\PYGZus{}refine}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

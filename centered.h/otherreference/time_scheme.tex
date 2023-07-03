@@ -1,0 +1,206 @@
+\documentclass[a4paper]{report}
+\usepackage[a4paper, margin=20mm]{geometry}
+\usepackage{amsmath, pdflscape}
+\usepackage[ansinew]{inputenc}
+%\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,matrix, positioning}
+\pagestyle{empty}
+\begin{document}
+\tikzset{
+decision/.style = {diamond, draw, fill=blue!20,
+                   text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt},
+block/.style    = {rectangle, draw, fill=blue!20,
+                    text width=6cm, text centered, rounded corners, minimum height=4em},
+suggestion/.style    = {rectangle, draw, fill=green!20,
+                    text width=6cm, text centered, rounded corners, minimum height=4em},
+line/.style     = {draw, -latex'},
+cloud/.style    = {draw, ellipse,fill=red!20, text width=4.5em, text badly centered,  node distance=3cm,
+                   minimum height=2em}
+}
+
+\title{A brief guide to the numerical scheme implemented in Basilisk}
+\author{Jose Lopez-Herrera \\ Universidad de Sevilla}
+\maketitle
+\chapter{Introduction}
+\section{Equations}
+The solved equations are the Navier-Stokes incompressible one given by,
+\begin{gather}
+\nabla \cdot \mathbf{u} = 0 \\
+\partial_t \mathbf{u} + \mathbf{u} \cdot \nabla \mathbf{u} =  \frac{1}{\rho} \left(- \nabla p + \nabla \cdot ( 2\mu \mathcal{D}) \right) + \mathbf{a}
+\end{gather}
+where $\mathcal{D}$ is the deformation tensor and $\mathbf{a}$ stands for extra acceleration than can be originated by several causes, as for example the gravitational forces, surface tension forces, viscoelastic forces, etc.
+
+Simultaneously it can be computed any tracer, $c_i$ or VOF tracer $T_i$,
+\begin{gather}
+\partial_t T_i + \mathbf{u} \cdot \nabla T_i = 0 \\
+\partial_t c_i +   \nabla \cdot( \mathbf{u} c_i) = 0
+\end{gather}
+Observe that these tracer can be passively advected with the fluid or, in a more common (and interesting situation), can affect actively the fluid motion as for example by altering the distribution of the fluid properties
+\begin{equation}
+\rho = \rho (T_i,c_i) \quad \mbox{and} \quad \mu = \mu (T_i,c_i).
+\end{equation}
+\section{Momentum equation}
+The advection part of momentum $(\mathbf{u} \cdot \nabla) \mathbf{u}$ can be more easily computed profiting the incompressibility of the fluid.  In effect, the divergence of the dyadic product $\mathbf{u}\mathbf{u}$ (also written as $\mathbf{u} \bigotimes \mathbf{u}$) writes
+$$
+\nabla \cdot(\mathbf{u}\mathbf{u}) = \mathbf{u} (\nabla \cdot \mathbf{u}) + (\mathbf{u} \cdot \nabla) \mathbf{u} = (\mathbf{u} \cdot \nabla) \mathbf{u}.
+$$
+
+Observe that the Gauss's theorem allows its computation by evaluating the fluxes through the cell's faces,
+$$
+\int_\Omega \nabla \cdot(\mathbf{u}\mathbf{u}) \, d\Omega = \int_\Sigma \mathbf{u}(\mathbf{u} \cdot \mathbf{n}) \, d\Sigma
+$$
+This conservative approach of the Gauss's theorem, i.e. to calculate temporal evolution at the cell center by computing fluxes across cell faces is thoroughly used in the numerical scheme.
+
+\newpage
+\newgeometry{margin = 10mm}
+\begin{landscape}
+  \begin{center}
+    {\Large \textbf{Flowchart of the generic time step}}
+    \resizebox{0.8\linewidth}{!}{
+    \begin{tikzpicture}[node distance = 2cm, auto, font=\sffamily\footnotesize]
+      % Place nodes
+      \node [block] (init) {\textbf{Starting point} \\
+        Velocities: (a)centered: $\mathbf{u}^n$ and (b) normal face: $u^{f,n}$  \\
+        Centered pressure: $p^n$ \\
+        Centered pressure gradient + extra-accelerations (no viscosity):
+        $$\mathbf{g}^n = -\nabla p^n + \mathbf{a}^n$$
+        Centered tracers: $c_i^{n-1/2}$ \\ VOF tracers: $T_i^{n-1/2}$ };
+      \node [block, below of=init, node distance=35mm] (dtmax) {\textbf{event dtmax} \\
+        Set the maximum imposed step size (if any)};
+      \node [block, below of=dtmax, node distance=25mm] (stability) {\textbf{event Stability} \\
+        Reduces time step if necessary according to CFL or other criteria. };
+      \node [block, below of=stability, node distance=25mm] (VOF) {\textbf{event VOF} \\
+        VoF tracers are advected to time $n+1/2$:
+        $$
+        T_i^{n+1/2} = T_i^{n-1/2} + \Delta t \nabla \cdot (T^{n}_{i} \mathbf{u}^n)
+        $$
+      };
+      \node [block, below of=VOF, node distance=35mm] (tracers) {\textbf{event tracer\_advection} \\ %\\
+        %    Tracers are advected also to time $n+1/2$.
+        Using the Bell-Colella-Glaz scheme are advanced the center values of the tracers to the instant $n+1/2$. This method is essentially an extrapolation from center values to face value and from time $n-1/2$ to $n$,
+        $c^{f,n}_{i} = \mathbf{f}(c^{n-1/2}_{i}, u^{f,n})$, followed by an explicit update,
+        \begin{equation*}
+          \begin{split}
+            c_i^{n+1/2} &= c_i^{n-1/2} + \Delta t \nabla \cdot (c^{n}_{i} \mathbf{u}^{n}) \\ &= c_i^{n-1/2} +\frac{\Delta t}{h^2} \int_{\partial \mathcal{C}} c^{f,n}_{i} u^{f,n} \, d\Sigma
+          \end{split}
+        \end{equation*}
+      };
+      \node [suggestion, below of=tracers, node distance=35mm] (diffusion) {Not present at the moment but I wonder it not would be convenient to add a: \\
+        \textbf{event tracer\_diffusion} here}; %\\
+      \node [block, right of=init , node distance=9cm] (properties) {\textbf{event properties} \\
+        The relevant properties like viscosity and density are advanced to the step $n+1/2$. Typically depend on the tracers,
+        $$
+        \rho^{n+1/2}, \mu^{n+1/2} = \mathbf{f}(T_i^{n+1/2},c_i^{n+1/2})
+        $$
+      };
+      \node [block, below of=properties, node distance=8cm] (advection) {\textbf{event advection\_term} \\ %\\
+        %    Tracers are advected also to time $n+1/2$.
+        With a variant of the BCG scheme are calculated normal face velocities at instant $n+1/2$,
+        $$
+        u_p^{f,n+1/2} = \mathbf{f}(\mathbf{u}^n,\mathbf{g}^n).
+        $$
+        Note that the extrapolation takes into account either the pressure gradient and extra-accelerations by means of $\mathbf{g}^n$. The label  $p$ denotes that it is a \textsc{prediction}. i.e, its solenoidal character is not guaranteed ($\nabla \cdot \mathbf{u}_p \neq 0$).\\[7pt]
+
+        \textsc{Projection step:} Consist in correct the predicted face velocity $u_p^{f,n+1/2}$ to make it solenoidal. To this end we derive a correction for the face velocities,
+        \begin{equation*}
+          \begin{split}
+            u^{f,n+1/2} &=u_p^{f,n+1/2}+\Delta u^f \\&= u_p^{f,n+1/2}-\nabla p_f (\Delta t)/\rho
+          \end{split}
+        \end{equation*}
+        Attention, $p_f$ is a correction NOT the real pressure field. \\[7pt] % being the solution of,
+        %$\nabla \cdot \mathbf{u}_p = \Delta t\nabla \cdot( \nabla p_f/\rho)$
+        Advection term is computed using again BCG\footnote{\tiny Note that $\mathbf{u}^{f,n+1/2}$ is the velocity vector at faces while $u^{f,n+1/2}$ is the component \emph{normal} to the face, relevant for calculation of fluxes.},
+        \begin{equation*}
+          \begin{array}{c}
+            \mathbf{u}^{f,n+1/2} = \mathbf{f}(\mathbf{u}^{n},\mathbf{g}^{n}, u^{f,n+1/2}) \\
+            \frac{\mathbf{u}_a^{n+1} - \mathbf{u}^{n}}{\Delta t} = \frac{1}{h^2}\int_{\partial \mathcal{C}} u^{f,n+1/2}\mathbf{u}^{f,n+1/2} \, d \Sigma.
+          \end{array}
+        \end{equation*}
+      };
+      \node [block, right of=init, node distance=18cm] (viscous) {\textbf{event viscosity} \\
+        It solves implicitly the equation
+        \begin{equation*}
+          \begin{split}
+            \frac{\mathbf{u}^{n+1}_v - \mathbf{u}^{n+1}_a}{\Delta t}  = \nabla \cdot [2 \mu \mathcal{D}_v^{n+1}] -\frac{\nabla p^n}{\rho}+\mathbf{a}^n
+          \end{split}
+        \end{equation*}
+        $\mathbf{u}^{n+1}_a$ is the velocity after considering the advection term.\\
+        Due to \emph{correction(-$\Delta t$)},
+        the center velocity at the end of this event is
+        $$
+        \mathbf{u}_*^{n+1} = \mathbf{u}^{n+1}_v - \Delta t (-\frac{\nabla p^n}{\rho}+\mathbf{a}^n)
+        $$
+        Normal face velocity at instant $n+1$, $u_*^{f,n+1}$, are constructed averaging $\mathbf{u}_*^{n+1}$.
+      };
+      \node [block, below of=viscous, node distance = 5cm] (acceleration) {\textbf{event acceleration} \\ Once the accelerations at faces are calculated at the instant $n+1$, $a^{f,n+1}$, the face velocity is consequently augmented
+        $$
+        u_{**}^{f,n+1} = u^{f,n+1}_* + \Delta t a^{f,n+1}
+        $$
+      };
+
+      \node [block, below of=acceleration, node distance=6cm] (projection) {\textbf{event projection} \\ A projection step with $u_{**}^{f,n+1}$ is done. As a result a normal face velocities are divergence free
+        $$
+        u^{f,n+1} = u_{**}^{f,n+1} -\nabla p^{n+1} (\Delta t)/\rho
+        $$
+        The correction pressure $p^{n+1}$ is considered also the pressure field at instant $n+1$.
+
+        Face values of the enriched normal pressure gradient $g^{f,n+1}$ are calculated from the pressure field $p^{n+1}$ and acceleration $a^{f,n+1}$. Centered value $\mathbf{g}^{n+1}$ are calculated simply by averaging.
+
+        Finally, centered velocity at $n+1$ is simply,
+        $$
+        \mathbf{u}^{n+1} = \mathbf{u}_{*}^{n+1} + \Delta t [-(\nabla p^{n+1})/\rho +\mathbf{a}^{n+1}]
+        $$
+      };
+      \node [cloud, below of=projection, node distance=4cm] (end) {End timestep};
+      % Draw edges
+      \path [line] (init) -- (dtmax);
+      \path [line] (dtmax) -- (stability);
+      \path [line] (stability) -- (VOF);
+      \path [line] (VOF) -- (tracers);
+      \path [line] (tracers) -- (diffusion);
+      \path [line] (diffusion.east) -| ([xshift=-1.5cm] properties.west)
+      -- (properties.west);
+      \path [line] (properties) -- (advection);
+      %    \path [line] (advection) -- (viscous);
+      \path [line] (advection.east) -| ([xshift=-1.5cm] viscous.west)
+      -- (viscous.west);
+      \path [line] (viscous) -- (acceleration);
+      \path [line] (acceleration) -- (projection);
+      \path [line] (projection) -- (end);
+    \end{tikzpicture}
+}
+  \end{center}
+\end{landscape}
+\newpage
+\restoregeometry
+\section{Additional considerations}
+
+The basilisk uses a fractional step method consisting in:
+\begin{equation}
+\begin{array}{lcrcl}
+\mbox{\textbf{event advection}} &  \quad &  \mathbf{u}^{n+1}_a    & = & \mathbf{u}^{n-1} - \Delta t (\mathbf{u}^{n+1/2} \cdot \nabla \mathbf{u}^{n+1/2})  \\
+\mbox{\textbf{event viscosity}, \emph{correction($\Delta t$)}} & \quad & \mathbf{u}^{n+1}_r   & = & \mathbf{u}^{n+1}_a + \Delta t (-\nabla p^n/\rho + \mathbf{a}^{n})  \\
+\mbox{\textbf{event viscosity}, \emph{viscous()}} & \quad & \mathbf{u}^{n+1}_v   & = & \mathbf{u}^{n+1}_r + \Delta t (\nabla \cdot [2 \mu \mathcal{D}^{n+1}_v])  \\
+\mbox{\textbf{event viscosity}, \emph{correction(-$\Delta t$)}} & \quad & \mathbf{u}^{n+1}_*   & = & \mathbf{u}^{n+1}_v - \Delta t (-\nabla p^n/\rho + \mathbf{a}^{n})  \\
+\mbox{\textbf{event projection}} & \quad & \mathbf{u}^{n+1}   & = & \mathbf{u}^{n+1}_* + \Delta t (-\nabla p^{n+1}/\rho + \mathbf{a}^{n+1})  \\
+\end{array}
+\end{equation}
+Summing up all this fractional steps, the general scheme is,
+\begin{equation}
+\mathbf{u}^{n+1}  =  \mathbf{u}^{n} + \Delta t (-\mathbf{u}^{n+1/2} \cdot \nabla \mathbf{u}^{n+1/2}-\nabla p^{n+1}/\rho + \nabla \cdot [2 \mu \mathcal{D}^{n+1}_v] + \mathbf{a}^{n+1})
+\end{equation}
+being the deformation tensor $\mathcal{D}$ calculated with the velocity, $\mathbf{u}_v^{n+1}$, resulting of the implicit approximate equation,
+\begin{equation}
+\mathbf{u}_v^{n+1}  =  \mathbf{u}^{n} + \Delta t (-\mathbf{u}^{n+1/2} \cdot \nabla \mathbf{u}^{n+1/2}-\nabla p^{n}/\rho + \nabla \cdot [2 \mu \mathcal{D}^{n+1}_v] + \mathbf{a}^{n})
+\end{equation}
+
+Since the acceleration event is located after the viscosity event, in case that the acceleration depend upon the velocity it would be,
+$$
+\mathbf{a}^{n+1} = \mathbf{a}^{n+1} (\mathbf{u}_*^{n+1})
+$$
+
+{\color{red} Should not be the acceleration being calculated with $\mathbf{u}_v^{n+1}$ instead of $\mathbf{u}_*^{n+1}$ ? }
+
+
+\end{document}

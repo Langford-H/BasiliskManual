@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{struct} \PYG{n}{MGSolve} \PYG{p}{\PYGZob{}}
+  \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{o}{*} \PYG{n}{b}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{p}{(}\PYG{o}{*} \PYG{n}{residual}\PYG{p}{)} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{b}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{,}
+               \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{);}\PYG{c+c1}{// 求解残差的函数，在下一节会出现}
+  \PYG{k+kt}{void} \PYG{p}{(}\PYG{o}{*} \PYG{n}{relax}\PYG{p}{)} \PYG{p}{(}\PYG{k}{scalar} \PYG{o}{*} \PYG{n}{da}\PYG{p}{,} \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{depth}\PYG{p}{,}
+          \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{);}
+  \PYG{k+kt}{void} \PYG{o}{*} \PYG{n}{data}\PYG{p}{;}\PYG{c+c1}{// 该参数的具体细节将在下一节展示}
+
+  \PYG{k+kt}{int} \PYG{n}{nrelax}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{o}{*} \PYG{n}{res}\PYG{p}{;}
+  \PYG{k+kt}{int} \PYG{n}{minlevel}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{tolerance}\PYG{p}{;}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

@@ -1,0 +1,9 @@
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'geometry.blg'
+[29] biber:322> INFO - === 一 7月  3, 2023, 14:56:23
+[35] Biber.pm:415> INFO - Reading 'geometry.bcf'
+[60] Biber.pm:943> INFO - Found 0 citekeys in bib section 0
+[63] Utils.pm:293> WARN - The file 'geometry.bcf' does not contain any citations!
+[66] bbl.pm:652> INFO - Writing 'geometry.bbl' with encoding 'UTF-8'
+[66] bbl.pm:755> INFO - Output to geometry.bbl
+[66] Biber.pm:128> INFO - WARNINGS: 1

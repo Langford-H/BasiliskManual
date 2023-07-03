@@ -1,0 +1,37 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{mgstats} \PYG{n+nf}{poisson} \PYG{p}{(}\PYG{k}{struct} \PYG{n}{Poisson} \PYG{n}{p}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{c+c1}{//如果$\alpha,\lambda$没有设置，则默认其为单位场}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{p}\PYG{p}{.}\PYG{n}{alpha}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)}
+    \PYG{n}{p}\PYG{p}{.}\PYG{n}{alpha} \PYG{o}{=} \PYG{n}{unityf}\PYG{p}{;}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{p}\PYG{p}{.}\PYG{n}{lambda}\PYG{p}{.}\PYG{n}{i}\PYG{p}{)}
+    \PYG{n}{p}\PYG{p}{.}\PYG{n}{lambda} \PYG{o}{=} \PYG{n}{zeroc}\PYG{p}{;}
+
+  \PYG{c+c1}{//将这两个参数赋值到每一层级网格中}
+  \PYG{n}{face} \PYG{k}{vector} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{alpha}\PYG{p}{;}
+  \PYG{k}{scalar} \PYG{n}{lambda} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{lambda}\PYG{p}{;}
+  \PYG{n}{restriction} \PYG{p}{(\PYGZob{}}\PYG{n}{alpha}\PYG{p}{,}\PYG{n}{lambda}\PYG{p}{\PYGZcb{});}
+
+  \PYG{c+c1}{//设置残差容忍，该常数是跳出循环的判定参数，如果没有设置，则使用默认参数值}
+
+  \PYG{k+kt}{double} \PYG{n}{defaultol} \PYG{o}{=} \PYG{n}{TOLERANCE}\PYG{p}{;}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{)}
+    \PYG{n}{TOLERANCE} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{;}
+
+  \PYG{k}{scalar} \PYG{n}{a} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{a}\PYG{p}{,} \PYG{n}{b} \PYG{o}{=} \PYG{n}{p}\PYG{p}{.}\PYG{n}{b}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}if EMBED}
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{p}\PYG{p}{.}\PYG{n}{embed\PYGZus{}flux} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{a}\PYG{p}{.}\PYG{n}{boundary}\PYG{p}{[}\PYG{n}{embed}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{symmetry}\PYG{p}{)}
+    \PYG{n}{p}\PYG{p}{.}\PYG{n}{embed\PYGZus{}flux} \PYG{o}{=} \PYG{n}{embed\PYGZus{}flux}\PYG{p}{;}
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// EMBED}
+  \PYG{n}{mgstats} \PYG{n}{s} \PYG{o}{=} \PYG{n}{mg\PYGZus{}solve} \PYG{p}{(\PYGZob{}}\PYG{n}{a}\PYG{p}{\PYGZcb{},} \PYG{p}{\PYGZob{}}\PYG{n}{b}\PYG{p}{\PYGZcb{},} \PYG{n}{residual}\PYG{p}{,} \PYG{n}{relax}\PYG{p}{,}
+            \PYG{o}{\PYGZam{}}\PYG{n}{p}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{res}\PYG{p}{,} \PYG{n}{minlevel} \PYG{o}{=} \PYG{n}{max}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{p}\PYG{p}{.}\PYG{n}{minlevel}\PYG{p}{));}\PYG{c+c1}{//注释：多重网格法中将残差值插值到最小网格层minlevel，默认minlevel=1}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We restore the default. */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{p}\PYG{p}{.}\PYG{n}{tolerance}\PYG{p}{)}
+    \PYG{n}{TOLERANCE} \PYG{o}{=} \PYG{n}{defaultol}\PYG{p}{;}
+
+  \PYG{k}{return} \PYG{n}{s}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

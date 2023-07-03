@@ -1,0 +1,71 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Coarsening and refinement of a volume fraction field}
+
+\PYG{c+cm}{On trees, we need to define how to coarsen (i.e. \PYGZdq{}restrict\PYGZdq{}) or}
+\PYG{c+cm}{refine (i.e. \PYGZdq{}prolongate\PYGZdq{}) interface definitions (see [geometry.h]()}
+\PYG{c+cm}{for a basic explanation of how interfaces are defined). */}
+\PYG{c+c1}{//说明：树形网格中，网格内体积分数及截距的重构}
+
+\PYG{c+cp}{\PYGZsh{}if TREE}
+
+\PYG{k+kt}{void} \PYG{n+nf}{fraction\PYGZus{}refine} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  If the parent cell is empty or full, we just use the same value for}
+\PYG{c+cm}{  the fine cell. */}
+
+  \PYG{k+kt}{double} \PYG{n}{cc} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[];}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{cc} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mf}{0.} \PYG{o}{||} \PYG{n}{cc} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mf}{1.}\PYG{p}{)}
+    \PYG{n}{foreach\PYGZus{}child}\PYG{p}{()}
+      \PYG{n}{c}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{cc}\PYG{p}{;}
+  \PYG{k}{else} \PYG{p}{\PYGZob{}}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    Otherwise, we reconstruct the interface in the parent cell. */}
+
+    \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{n}{mycs} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{);}
+    \PYG{k+kt}{double} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{plane\PYGZus{}alpha} \PYG{p}{(}\PYG{n}{cc}\PYG{p}{,} \PYG{n}{n}\PYG{p}{);}
+
+    \PYG{c+cm}{/**}
+\PYG{c+cm}{    And compute the volume fraction in the quadrant of the coarse cell}
+\PYG{c+cm}{    matching the fine cells. We use symmetries to simplify the}
+\PYG{c+cm}{    combinations. */}
+
+    \PYG{n}{foreach\PYGZus{}child}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+      \PYG{k}{static} \PYG{k}{const} \PYG{n}{coord} \PYG{n}{a} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mf}{0.}\PYG{p}{,}\PYG{l+m+mf}{0.}\PYG{p}{,}\PYG{l+m+mf}{0.}\PYG{p}{\PYGZcb{},} \PYG{n}{b} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+m+mf}{.5}\PYG{p}{,}\PYG{l+m+mf}{.5}\PYG{p}{,}\PYG{l+m+mf}{.5}\PYG{p}{\PYGZcb{};}\PYG{c+c1}{//从3D角度讲就是选取第一象限中的子单元}
+      \PYG{n}{coord} \PYG{n}{nc}\PYG{p}{;}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+         \PYG{n}{nc}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{child}\PYG{p}{.}\PYG{n}{x}\PYG{o}{*}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}\PYG{c+c1}{//转换坐标，将各个象限的子单元通过坐标转换的方式让其存在于第一象限}
+      \PYG{n}{c}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{rectangle\PYGZus{}fraction} \PYG{p}{(}\PYG{n}{nc}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{n}{b}\PYG{p}{);}\PYG{c+c1}{//本函数请详细geometry.h说明文档，其作用是计算通过坐标a,b定义的单元中的方形区域的体积分数}
+    \PYG{p}{\PYGZcb{}}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{Finally, we also need to prolongate the reconstructed value of}
+\PYG{c+cm}{$\alpha$. This is done with the simple formula below. We add an}
+\PYG{c+cm}{attribute so that we can access the normal from the refinement}
+\PYG{c+cm}{function. */}
+
+\PYG{n}{attribute} \PYG{p}{\PYGZob{}}
+  \PYG{k}{vector} \PYG{n}{n}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n}{alpha\PYGZus{}refine} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{alpha}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{vector} \PYG{n}{n} \PYG{o}{=} \PYG{n}{alpha}\PYG{p}{.}\PYG{n}{n}\PYG{p}{;}
+  \PYG{k+kt}{double} \PYG{n}{alphac} \PYG{o}{=} \PYG{l+m+mf}{2.}\PYG{o}{*}\PYG{n}{alpha}\PYG{p}{[];}
+  \PYG{n}{coord} \PYG{n}{m}\PYG{p}{;}
+  \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{m}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+  \PYG{n}{foreach\PYGZus{}child}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{n}{alpha}\PYG{p}{[]} \PYG{o}{=} \PYG{n}{alphac}\PYG{p}{;}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{alpha}\PYG{p}{[]} \PYG{o}{\PYGZhy{}=} \PYG{n}{child}\PYG{p}{.}\PYG{n}{x}\PYG{o}{*}\PYG{n}{m}\PYG{p}{.}\PYG{n}{x}\PYG{o}{/}\PYG{l+m+mf}{2.}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cp}{\PYGZsh{}endif }\PYG{c+c1}{// TREE}
+\end{Verbatim}

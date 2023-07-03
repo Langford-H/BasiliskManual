@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kt}{double} \PYG{n}{un} \PYG{o}{=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{uf}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{/}\PYG{p}{(}\PYG{n}{fm}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]}\PYG{o}{*}\PYG{n}{Delta} \PYG{o}{+} \PYG{n}{SEPS}\PYG{p}{),} \PYG{n}{s} \PYG{o}{=} \PYG{n}{sign}\PYG{p}{(}\PYG{n}{un}\PYG{p}{);}
+\end{Verbatim}

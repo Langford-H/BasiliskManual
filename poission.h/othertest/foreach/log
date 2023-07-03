@@ -1,0 +1,8 @@
+../sysdeps/unix/sysv/linux/poll.c:29:error: [H[J[3J[36m───[0m [1;33mOutput/messages[0m [36m────────────────────────────────────────────────────────────[0m
+../sysdeps/unix/sysv/linux/poll.c:29:error: [Thread debugging using libthread_db enabled]
+../sysdeps/unix/sysv/linux/poll.c:29:error: Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+../sysdeps/unix/sysv/linux/poll.c:29:error: [New Thread 0x7fffefb33700 (LWP 183945)]
+../sysdeps/unix/sysv/linux/poll.c:29:error: [H[J[3J[36m───[0m [1;33mOutput/messages[0m [36m────────────────────────────────────────────────────────────[0m
+../sysdeps/unix/sysv/linux/poll.c:29:error: [New Thread 0x7fffef2f2700 (LWP 183946)]
+../sysdeps/unix/sysv/linux/poll.c:29:error: [H[J[3J[36m───[0m [1;33mOutput/messages[0m [36m────────────────────────────────────────────────────────────[0m
+../sysdeps/unix/sysv/linux/poll.c:29:error: Thread 1 "foreach" received signal SIGINT, Interrupt.

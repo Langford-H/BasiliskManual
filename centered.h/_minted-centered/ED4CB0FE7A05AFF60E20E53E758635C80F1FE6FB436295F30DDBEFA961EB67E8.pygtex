@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{}\PYGZsh{} Viscous term}
+
+\PYG{c+cm}{We first define a function which adds the pressure gradient and}
+\PYG{c+cm}{acceleration terms. */}
+
+\PYG{k}{static} \PYG{k+kt}{void} \PYG{n+nf}{correction} \PYG{p}{(}\PYG{k+kt}{double} \PYG{n}{dt}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{foreach}\PYG{p}{()}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+      \PYG{n}{u}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{+=} \PYG{n}{dt}\PYG{o}{*}\PYG{n}{g}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[];}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+cm}{/**}
+\PYG{c+cm}{The viscous term is computed implicitly. We first add the pressure}
+\PYG{c+cm}{gradient and acceleration terms, as computed at time $t$, then call}
+\PYG{c+cm}{the implicit viscosity solver. We then remove the acceleration and}
+\PYG{c+cm}{pressure gradient terms as they will be replaced by their values at}
+\PYG{c+cm}{time $t+\Delta t$. */}
+
+\PYG{n}{event} \PYG{n+nf}{viscous\PYGZus{}term} \PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{constant}\PYG{p}{(}\PYG{n}{mu}\PYG{p}{.}\PYG{n}{x}\PYG{p}{)} \PYG{o}{!=} \PYG{l+m+mf}{0.}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{correction} \PYG{p}{(}\PYG{n}{dt}\PYG{p}{);}\PYG{c+c1}{//构造poisson型方程的残差，直接构造$\mathbf{u^{***}}$}
+    \PYG{n}{mgu} \PYG{o}{=} \PYG{n}{viscosity} \PYG{p}{(}\PYG{n}{u}\PYG{p}{,} \PYG{n}{mu}\PYG{p}{,} \PYG{n}{rho}\PYG{p}{,} \PYG{n}{dt}\PYG{p}{,} \PYG{n}{mgu}\PYG{p}{.}\PYG{n}{nrelax}\PYG{p}{);}
+    \PYG{n}{correction} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{dt}\PYG{p}{);}\PYG{c+c1}{//注意此时由于viscosity的计算u[]已经存储的是$\mathbf{u^*}$，让其减去位于$n-\frac{1}{2}$的加速度项与压力梯度项}
+  \PYG{p}{\PYGZcb{}}
+
+  \PYG{c+cm}{/**}
+\PYG{c+cm}{  We reset the acceleration field (if it is not a constant). */}
+
+  \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{n}{is\PYGZus{}constant}\PYG{p}{(}\PYG{n}{a}\PYG{p}{.}\PYG{n}{x}\PYG{p}{))} \PYG{p}{\PYGZob{}}
+    \PYG{n}{face} \PYG{k}{vector} \PYG{n}{af} \PYG{o}{=} \PYG{n}{a}\PYG{p}{;}
+    \PYG{n}{trash} \PYG{p}{(\PYGZob{}}\PYG{n}{af}\PYG{p}{\PYGZcb{});}
+    \PYG{n}{foreach\PYGZus{}face}\PYG{p}{()}
+      \PYG{n}{af}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}\PYG{c+c1}{//刷新加速度项}
+  \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

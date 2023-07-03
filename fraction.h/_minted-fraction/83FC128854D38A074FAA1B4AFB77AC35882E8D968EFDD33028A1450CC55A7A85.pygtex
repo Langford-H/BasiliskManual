@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+cm}{/**}
+\PYG{c+cm}{\PYGZsh{}\PYGZsh{} Interfacial area}
+
+\PYG{c+cm}{This function returns the surface area of the interface as estimated}
+\PYG{c+cm}{using its VOF reconstruction. */}
+
+\PYG{n}{trace}
+\PYG{k+kt}{double} \PYG{n+nf}{interface\PYGZus{}area} \PYG{p}{(}\PYG{k}{scalar} \PYG{n}{c}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{double} \PYG{n}{area} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+  \PYG{n}{foreach} \PYG{p}{(}\PYG{n}{reduction}\PYG{p}{(}\PYG{o}{+:}\PYG{n}{area}\PYG{p}{))}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{1e\PYGZhy{}6} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{c}\PYG{p}{[]} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1.} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{1e\PYGZhy{}6}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{coord} \PYG{n}{n} \PYG{o}{=} \PYG{n}{interface\PYGZus{}normal} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{),} \PYG{n}{p}\PYG{p}{;}
+      \PYG{k+kt}{double} \PYG{n}{alpha} \PYG{o}{=} \PYG{n}{plane\PYGZus{}alpha} \PYG{p}{(}\PYG{n}{c}\PYG{p}{[],} \PYG{n}{n}\PYG{p}{);}
+      \PYG{n}{area} \PYG{o}{+=} \PYG{n}{pow}\PYG{p}{(}\PYG{n}{Delta}\PYG{p}{,} \PYG{n}{dimension} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{*}\PYG{n}{plane\PYGZus{}area\PYGZus{}center} \PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{alpha}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{p}\PYG{p}{);}\PYG{c+c1}{//对单个边界长度/面积进行单位化操作，如果是3维情况，则边界面积为2维故乘以$\Delta^2$，以此类推。}
+    \PYG{p}{\PYGZcb{}}
+  \PYG{k}{return} \PYG{n}{area}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

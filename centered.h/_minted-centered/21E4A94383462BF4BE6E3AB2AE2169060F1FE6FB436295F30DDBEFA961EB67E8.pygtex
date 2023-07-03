@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{event} \PYG{n+nf}{test1A}\PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stdout}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}test1A}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{event} \PYG{n+nf}{scriptA}\PYG{p}{(}\PYG{n}{i}\PYG{o}{++}\PYG{p}{,}\PYG{n}{last}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stdout}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}test1B}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

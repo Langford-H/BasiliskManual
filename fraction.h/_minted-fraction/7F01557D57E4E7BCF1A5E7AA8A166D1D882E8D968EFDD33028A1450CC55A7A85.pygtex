@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{n}{coord} \PYG{n+nf}{facet\PYGZus{}normal} \PYG{p}{(}\PYG{n}{Point} \PYG{n}{point}\PYG{p}{,} \PYG{k}{scalar} \PYG{n}{c}\PYG{p}{,} \PYG{n}{face} \PYG{k}{vector} \PYG{n}{s}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+  \PYG{k}{if} \PYG{p}{(}\PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{.}\PYG{n}{i} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}} \PYG{c+c1}{// compute normal from face fractions}
+    \PYG{n}{coord} \PYG{n}{n}\PYG{p}{;}
+    \PYG{k+kt}{double} \PYG{n}{nn} \PYG{o}{=} \PYG{l+m+mf}{0.}\PYG{p}{;}
+    \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+      \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[]} \PYG{o}{\PYGZhy{}} \PYG{n}{s}\PYG{p}{.}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{];}
+      \PYG{n}{nn} \PYG{o}{+=} \PYG{n}{fabs}\PYG{p}{(}\PYG{n}{n}\PYG{p}{.}\PYG{n}{x}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{nn} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.}\PYG{p}{)}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{/=} \PYG{n}{nn}\PYG{p}{;}
+    \PYG{k}{else}
+      \PYG{n}{foreach\PYGZus{}dimension}\PYG{p}{()}
+    \PYG{n}{n}\PYG{p}{.}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mf}{1.}\PYG{o}{/}\PYG{n}{dimension}\PYG{p}{;}
+    \PYG{k}{return} \PYG{n}{n}\PYG{p}{;}
+  \PYG{p}{\PYGZcb{}}
+  \PYG{k}{return} \PYG{n}{interface\PYGZus{}normal} \PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{c}\PYG{p}{);}\PYG{c+c1}{//如果没有单元表面面积分数，则调用myc中的函数直接利用周围单元的体积分数对法向量进行插值}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

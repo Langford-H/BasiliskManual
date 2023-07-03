@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k+kt}{int} \PYG{n}{NITERMAX} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{n}{NITERMIN} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{k+kt}{double} \PYG{n}{TOLERANCE} \PYG{o}{=} \PYG{l+m+mf}{1e\PYGZhy{}3}\PYG{p}{;}\PYG{c+c1}{//默认定义，包括迭代次数与残差宽容度}
+
+\PYG{k}{typedef} \PYG{k}{struct} \PYG{p}{\PYGZob{}}
+  \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}              \PYG{c+c1}{// 总循环次数}
+  \PYG{k+kt}{double} \PYG{n}{resb}\PYG{p}{,} \PYG{n}{resa}\PYG{p}{;}  \PYG{c+c1}{// 在迭代前后残差的最大值，用于结束循环判断}
+  \PYG{k+kt}{double} \PYG{n}{sum}\PYG{p}{;}         \PYG{c+c1}{// sum of r.h.s.（r.h.s.代表等式右端，即所有的b的和）}
+  \PYG{k+kt}{int} \PYG{n}{nrelax}\PYG{p}{;}         \PYG{c+c1}{// Jacobi循环$\mathscr{R}$次数}
+  \PYG{k+kt}{int} \PYG{n}{minlevel}\PYG{p}{;}       \PYG{c+c1}{// 网格密度的最低密度等级}
+\PYG{p}{\PYGZcb{}} \PYG{n}{mgstats}\PYG{p}{;}
+\end{Verbatim}
