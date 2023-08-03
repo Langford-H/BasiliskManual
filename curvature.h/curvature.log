@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 JUL 2023 14:42
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 AUG 2023 21:47
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1375,28 +1375,28 @@ Package: xeCJK-listings 2020/02/14 v3.8.1 xeCJK patch file for listings
  (./curvature.aux)
 \openout1 = `curvature.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 \AtBeginShipoutBox=\box137
-Package hyperref Info: Link coloring ON on input line 15.
+Package hyperref Info: Link coloring ON on input line 14.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1406,9 +1406,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count526
 )
-LaTeX Info: Redefining \ref on input line 15.
-LaTeX Info: Redefining \pageref on input line 15.
-LaTeX Info: Redefining \nameref on input line 15.
+LaTeX Info: Redefining \ref on input line 14.
+LaTeX Info: Redefining \pageref on input line 14.
+LaTeX Info: Redefining \nameref on input line 14.
  (./curvature.out) (./curvature.out)
 \@outlinefile=\write7
 \openout7 = `curvature.out'.
@@ -1454,7 +1454,7 @@ Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 15.
+LaTeX Info: Redefining \selectfont on input line 14.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -1469,8 +1469,8 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'curvature.bbl' found.
  (./curvature.bbl)
-Package biblatex Info: Reference section=0 on input line 15.
-Package biblatex Info: Reference segment=0 on input line 15.
+Package biblatex Info: Reference section=0 on input line 14.
+Package biblatex Info: Reference segment=0 on input line 14.
  (/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
 \FN@temptoken=\toks50
@@ -1485,38 +1485,38 @@ Package footmisc Info: Declaring symbol style lamport*-robust on input line 924.
 )
 \c@lstlisting=\count528
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 17.
+(Font)              scaled to size 17.28pt on input line 16.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 17.28pt on input line 17.
+(Font)              scaled to size 17.28pt on input line 16.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 17.
+(Font)              scaled to size 12.0pt on input line 16.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 17.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
+(Font)              scaled to size 10.0pt on input line 16.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 16.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 16.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 17.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 16.
  (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.0pt on input line 18.
+(Font)              scaled to size 10.0pt on input line 17.
 
 
 LaTeX Font Warning: Font shape `TU/FandolKai-Regular(0)/b/n' undefined
-(Font)              using `TU/FandolKai-Regular(0)/m/n' instead on input line 19.
+(Font)              using `TU/FandolKai-Regular(0)/m/n' instead on input line 18.
 
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 22.
+(Font)              scaled to size 9.85492pt on input line 21.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 22.
+(Font)              scaled to size 10.79993pt on input line 21.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 22.
+(Font)              scaled to size 10.79993pt on input line 21.
 (./curvature.toc
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
 (Font)              scaled to size 8.99994pt on input line 3.
@@ -1525,7 +1525,7 @@ LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
 \openout8 = `curvature.toc'.
 
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 9.85492pt on input line 27.
+(Font)              scaled to size 9.85492pt on input line 26.
 \openout5 = `curvature.pyg'.
 
  (./_minted-curvature/default-pyg-prefix.pygstyle) (./_minted-curvature/default.pygstyle) (./_minted-curvature/7506D4393513AA6B7761CE2C58A9C3A977E3230E62D8CA331410FE4029B1707C.pygtex)
@@ -1534,9 +1534,7 @@ LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
  (./_minted-curvature/4CDF7913E8B09791278B4AD8E0C886B777E3230E62D8CA331410FE4029B1707C.pygtex)
 \openout3 = `curvature.pyg'.
 
- [1
-
-] (./_minted-curvature/E2DE4EADCE1A1B36CB2560690C961B226B5E91B969B9AC043CB51F854D376FB7.pygtex
+ (./_minted-curvature/E2DE4EADCE1A1B36CB2560690C961B226B5E91B969B9AC043CB51F854D376FB7.pygtex
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
 (Font)              scaled to size 6.0pt on input line 2.
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
@@ -1546,12 +1544,14 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 (Font)              using `TU/FandolFang-Regular(0)/m/n' instead on input line 19.
 
-)
-Underfull \vbox (badness 10000) detected at line 73
+) [1
+
+]
+Underfull \vbox (badness 10000) detected at line 72
  []
 
 
-Underfull \vbox (badness 10000) detected at line 73
+Underfull \vbox (badness 10000) detected at line 72
  []
 
 [2]
@@ -1565,7 +1565,7 @@ Underfull \vbox (badness 10000) detected at line 73
 
  (./_minted-curvature/9F5754660C93617D70B463E481DB303D77E3230E62D8CA331410FE4029B1707C.pygtex)
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 81.
+(Font)              scaled to size 8.0pt on input line 80.
 \openout5 = `curvature.pyg'.
 
  (./_minted-curvature/0C8AB91226006C4C345465B39F79ADB577E3230E62D8CA331410FE4029B1707C.pygtex)
@@ -1578,35 +1578,35 @@ LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
 (Font)              scaled to size 10.95pt on input line 61.
 )
-Underfull \vbox (badness 4556) detected at line 197
+Underfull \vbox (badness 4556) detected at line 196
  []
 
 
-Overfull \vbox (16.464pt too high) detected at line 197
+Overfull \vbox (16.464pt too high) detected at line 196
  []
 
 [3]
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 [4]
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 [5]
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 
-Underfull \vbox (badness 10000) detected at line 197
+Underfull \vbox (badness 10000) detected at line 196
  []
 
 [6]
@@ -1616,69 +1616,69 @@ Underfull \vbox (badness 10000) detected at line 197
 \openout3 = `curvature.pyg'.
 
  (./_minted-curvature/C20D77A4944D055996A666CA0C1E9D496B5E91B969B9AC043CB51F854D376FB7.pygtex)
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 [7]
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 [8]
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 [9]
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 
-Underfull \vbox (badness 10000) detected at line 344
+Underfull \vbox (badness 10000) detected at line 343
  []
 
 [10]
 \openout3 = `curvature.pyg'.
 
  (./_minted-curvature/E739C040D72CE4D282224EEB117D458B6B5E91B969B9AC043CB51F854D376FB7.pygtex)
-Overfull \vbox (9.33424pt too high) detected at line 377
+Overfull \vbox (9.33424pt too high) detected at line 376
  []
 
 [11]
 File: image/workflow2.pdf Graphic file (type pdf)
 <use image/workflow2.pdf>
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 382.
+(Font)              scaled to size 10.95pt on input line 381.
 \openout3 = `curvature.pyg'.
 
  (./_minted-curvature/5A165726AA4E21F75246F09D120F40E06B5E91B969B9AC043CB51F854D376FB7.pygtex) [12]
-Underfull \vbox (badness 10000) detected at line 497
+Underfull \vbox (badness 10000) detected at line 496
  []
 
 
-Underfull \vbox (badness 10000) detected at line 497
+Underfull \vbox (badness 10000) detected at line 496
  []
 
 [13]
-Underfull \vbox (badness 10000) detected at line 497
+Underfull \vbox (badness 10000) detected at line 496
  []
 
 
-Underfull \vbox (badness 10000) detected at line 497
+Underfull \vbox (badness 10000) detected at line 496
  []
 
 [14]
-Underfull \vbox (badness 10000) detected at line 497
+Underfull \vbox (badness 10000) detected at line 496
  []
 
 
-Overfull \vbox (26.53561pt too high) detected at line 497
+Overfull \vbox (26.53561pt too high) detected at line 496
  []
 
 [15]
@@ -1688,15 +1688,15 @@ Overfull \vbox (26.53561pt too high) detected at line 497
 \openout3 = `curvature.pyg'.
 
  (./_minted-curvature/46C437EF54E937C0D14461CCD895091A6B5E91B969B9AC043CB51F854D376FB7.pygtex)
-Overfull \vbox (14.89684pt too high) detected at line 580
+Overfull \vbox (14.89684pt too high) detected at line 579
  []
 
 [16]
-Underfull \vbox (badness 10000) detected at line 580
+Underfull \vbox (badness 10000) detected at line 579
  []
 
 
-Underfull \vbox (badness 10000) detected at line 580
+Underfull \vbox (badness 10000) detected at line 579
  []
 
 [17]
@@ -1706,24 +1706,24 @@ Underfull \vbox (badness 10000) detected at line 580
 \openout3 = `curvature.pyg'.
 
 
-Overfull \hbox (16.42505pt too wide) in paragraph at lines 582--636
+Overfull \hbox (16.42505pt too wide) in paragraph at lines 581--635
 []\TU/FandolSong-Regular(0)/m/n/10.95 在 此 处 需 要 注 意 的 是，|  之 前 的 工 具 函 数[][][][][][]中 对 于 边 界 网 格 的 筛 选 是 不 完 全 的  |（例 如\TU/texgyretermes(0)/m/n/10.95 ”height.h
  []
 
 (./_minted-curvature/55A62DA0DEBC9EE086FCD40599C020996B5E91B969B9AC043CB51F854D376FB7.pygtex) [18]
-Underfull \vbox (badness 10000) detected at line 636
+Underfull \vbox (badness 10000) detected at line 635
  []
 
 
-Underfull \vbox (badness 10000) detected at line 636
+Underfull \vbox (badness 10000) detected at line 635
  []
 
 [19] [20]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 638.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 638.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 637.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 637.
  (./curvature.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 638.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 638.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 637.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 637.
 Package rerunfilecheck Info: File `curvature.out' has not changed.
 (rerunfilecheck)             Checksum: 71A4A9F97DA7DAD143C1A86BD7CAD96F;843.
 
@@ -1738,15 +1738,15 @@ Package logreq Info: Writing requests to 'curvature.run.xml'.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 17 (\begingroup)
+### semi simple group (level 1) entered at line 16 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
  40940 strings out of 479819
  836942 string characters out of 5895846
- 1619183 words of memory out of 5000000
+ 1618170 words of memory out of 5000000
  57266 multiletter control sequences out of 15000+600000
  543552 words of font info for 127 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  68i,11n,84p,796b,743s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on curvature.xdv (20 pages, 312712 bytes).
+Output written on curvature.xdv (20 pages, 312548 bytes).

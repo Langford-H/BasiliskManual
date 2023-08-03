@@ -1,15 +1,15 @@
 # Fdb version 3
-["biber curvature"] 1688366524 "curvature.bcf" "curvature.bbl" "curvature" 1688366527
-  "curvature.bcf" 1688366526 101230 9aaaa782c74a29f9ef80ac580fc20233 "xelatex"
+["biber curvature"] 1688366524 "curvature.bcf" "curvature.bbl" "curvature" 1691070448
+  "curvature.bcf" 1691070448 101230 9aaaa782c74a29f9ef80ac580fc20233 "xelatex"
   (generated)
-  "curvature.blg"
   "curvature.bbl"
-["xdvipdfmx"] 1688366526 "curvature.xdv" "curvature.pdf" "curvature" 1688366527
-  "curvature.xdv" 1688366526 312712 7943ef9608059e6b6e8b1591eb8741cf "xelatex"
+  "curvature.blg"
+["xdvipdfmx"] 1691070448 "curvature.xdv" "curvature.pdf" "curvature" 1691070448
+  "curvature.xdv" 1691070448 312548 501747a6b017aa6d73daa23f09e4e780 "xelatex"
   (generated)
   "curvature.pdf"
-["xelatex"] 1688366525 "curvature.tex" "curvature.xdv" "curvature" 1688366527
-  "/dev/null" 1688276428 0 d41d8cd98f00b204e9800998ecf8427e ""
+["xelatex"] 1691070447 "curvature.tex" "curvature.xdv" "curvature" 1691070448
+  "/dev/null" 1689050242 0 d41d8cd98f00b204e9800998ecf8427e ""
   "/etc/texmf/web2c/texmf.cnf" 1667224211 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136768653 1528 f853c4d1b4e0550255e02831fdc8496f ""
@@ -263,19 +263,19 @@
   "_minted-curvature/E739C040D72CE4D282224EEB117D458B6B5E91B969B9AC043CB51F854D376FB7.pygtex" 1688366523 2543 7efd38460f77719c5c3e65688ce9b9e3 ""
   "_minted-curvature/default-pyg-prefix.pygstyle" 1688366522 7889 3ce1fbc763e3e2c748310f4fe31722b6 ""
   "_minted-curvature/default.pygstyle" 1688366522 9275 f200be7fc0b7de2461cca28cb35b1427 ""
-  "curvature.aux" 1688366526 3993 d0e25627dafad3cec9b3a513700c759a "xelatex"
+  "curvature.aux" 1691070448 3993 d0e25627dafad3cec9b3a513700c759a "xelatex"
   "curvature.bbl" 1688366524 466 f7f239c736cf01ac6ce7bd829f9b3c7b "biber curvature"
-  "curvature.out" 1688366526 843 71a4a9f97da7dad143c1a86bd7cad96f "xelatex"
-  "curvature.run.xml" 1688366526 2379 7a65cb5b5f5b2d431f2cfa38879ce878 "xelatex"
-  "curvature.tex" 1678974395 26044 d1b62bf4e2a2a01f366fa287d5344a36 ""
-  "curvature.toc" 1688366526 989 806fbed362ded6b23102287634f86004 "xelatex"
+  "curvature.out" 1691070448 843 71a4a9f97da7dad143c1a86bd7cad96f "xelatex"
+  "curvature.run.xml" 1691070448 2379 7a65cb5b5f5b2d431f2cfa38879ce878 "xelatex"
+  "curvature.tex" 1691070444 26001 b68e2a2692f2f2e672462764b871199d ""
+  "curvature.toc" 1691070448 989 806fbed362ded6b23102287634f86004 "xelatex"
   "elegantpaper.cls" 1671350741 14839 113ab5173821e5b7b5dadee97617eb1a ""
   "image/workflow2.pdf" 1678966374 7729 d204587cc66fc3a454e83c79f673385d ""
   (generated)
-  "curvature.aux"
-  "curvature.toc"
-  "curvature.log"
   "curvature.bcf"
+  "curvature.log"
+  "curvature.toc"
   "curvature.out"
-  "curvature.xdv"
   "curvature.run.xml"
+  "curvature.xdv"
+  "curvature.aux"

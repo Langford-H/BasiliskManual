@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 JUL 2023 14:37
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 AUG 2023 21:47
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1379,28 +1379,28 @@ LaTeX Warning: Label `fig:pianyi1' multiply defined.
 )
 \openout1 = `fraction.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 \AtBeginShipoutBox=\box137
-Package hyperref Info: Link coloring ON on input line 16.
+Package hyperref Info: Link coloring ON on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1410,9 +1410,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count526
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
  (./fraction.out) (./fraction.out)
 \@outlinefile=\write7
 \openout7 = `fraction.out'.
@@ -1458,7 +1458,7 @@ Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 16.
+LaTeX Info: Redefining \selectfont on input line 15.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -1476,8 +1476,8 @@ Package biblatex Info: ... file 'fraction.bbl' found.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
 (Font)              scaled to size 9.0pt on input line 41.
 )
-Package biblatex Info: Reference section=0 on input line 16.
-Package biblatex Info: Reference segment=0 on input line 16.
+Package biblatex Info: Reference section=0 on input line 15.
+Package biblatex Info: Reference segment=0 on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
 \FN@temptoken=\toks50
@@ -1492,31 +1492,31 @@ Package footmisc Info: Declaring symbol style lamport*-robust on input line 924.
 )
 \c@lstlisting=\count528
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 18.
+(Font)              scaled to size 12.0pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 18.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
+(Font)              scaled to size 10.0pt on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 18.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 19.
+(Font)              scaled to size 9.85492pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
  (./fraction.toc
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
 (Font)              scaled to size 10.0pt on input line 3.
@@ -1530,7 +1530,7 @@ LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
 
 ]
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 9.85492pt on input line 39.
+(Font)              scaled to size 9.85492pt on input line 38.
 \openout3 = `fraction.pyg'.
 
  (./_minted-fraction/default-pyg-prefix.pygstyle) (./_minted-fraction/default.pygstyle) (./_minted-fraction/E4AD650FB860A82CC6309361C6429DF1882E8D968EFDD33028A1450CC55A7A85.pygtex
@@ -1550,16 +1550,16 @@ LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
 (Font)              scaled to size 10.95pt on input line 48.
 ) [3]
-Underfull \vbox (badness 10000) detected at line 134
+Underfull \vbox (badness 10000) detected at line 133
  []
 
 
-Underfull \vbox (badness 10000) detected at line 134
+Underfull \vbox (badness 10000) detected at line 133
  []
 
 [4]
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 147.
+(Font)              scaled to size 10.95pt on input line 146.
  [5]
 File: Level_set_method.png Graphic file (type bmp)
 <Level_set_method.png>
@@ -1567,27 +1567,27 @@ File: Level_set_method.png Graphic file (type bmp)
 \openout3 = `fraction.pyg'.
 
  (./_minted-fraction/7B7932FC1276BC5C00244099BA0DA6AE882E8D968EFDD33028A1450CC55A7A85.pygtex) [7]
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 [8]
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 [9]
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 
-Underfull \vbox (badness 10000) detected at line 363
+Underfull \vbox (badness 10000) detected at line 362
  []
 
 [10]
@@ -1597,7 +1597,7 @@ Underfull \vbox (badness 10000) detected at line 363
 \openout3 = `fraction.pyg'.
 
  (./_minted-fraction/7F01557D57E4E7BCF1A5E7AA8A166D1D882E8D968EFDD33028A1450CC55A7A85.pygtex)
-Overfull \vbox (1.25546pt too high) detected at line 390
+Overfull \vbox (1.25546pt too high) detected at line 389
  []
 
 [11]
@@ -1607,7 +1607,7 @@ Overfull \vbox (1.25546pt too high) detected at line 390
 \openout3 = `fraction.pyg'.
 
  [13] (./_minted-fraction/D09C08E5615A8C462EB393D9D6E73422882E8D968EFDD33028A1450CC55A7A85.pygtex)
-Underfull \vbox (badness 1783) detected at line 491
+Underfull \vbox (badness 1783) detected at line 490
  []
 
 [14]
@@ -1615,13 +1615,13 @@ Underfull \vbox (badness 1783) detected at line 491
 
  (./_minted-fraction/83FC128854D38A074FAA1B4AFB77AC35882E8D968EFDD33028A1450CC55A7A85.pygtex)
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
-(Font)              scaled to size 9.0pt on input line 515.
+(Font)              scaled to size 9.0pt on input line 514.
  [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 516.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 516.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 515.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 515.
  (./fraction.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 516.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 516.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 515.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 515.
 Package rerunfilecheck Info: File `fraction.out' has not changed.
 (rerunfilecheck)             Checksum: EAEECDB816B5CC3A257E8C4221B9408F;1752.
 
@@ -1639,15 +1639,15 @@ Package logreq Info: Writing requests to 'fraction.run.xml'.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 18 (\begingroup)
+### semi simple group (level 1) entered at line 17 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
  41173 strings out of 479819
  834399 string characters out of 5895846
- 1609967 words of memory out of 5000000
+ 1609954 words of memory out of 5000000
  57516 multiletter control sequences out of 15000+600000
  545893 words of font info for 138 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  68i,14n,84p,795b,4874s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on fraction.xdv (15 pages, 232612 bytes).
+Output written on fraction.xdv (15 pages, 232496 bytes).

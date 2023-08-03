@@ -2,11 +2,10 @@
 % 完整编译: xelatex -> biber/bibtex -> xelatex -> xelatex
 \documentclass[lang=cn,11pt,a4paper]{elegantpaper}
 
-\title{center.h文档说明}
+\title{centered.h文档说明}
 \author{Haochen Huang}
-\institute{西安交通大学MFM课题组}
 
-\version{3.02test}
+\version{4.02test}
 \date{\zhtoday}
 
 
@@ -21,7 +20,8 @@
 \begin{abstract}
 本文为basilisk的头文件center.h的说明文档，在阅读时请结合poisson.h、bcg.h、viscosity.h等说明头文件。\par
 2.02版本更新，全面更正之前错误，添加附录解释加速度项更新及Basilisk执行规则，添加程序示意图，更新理论部分，更新程序注释。\par
-3.02版本更新确认了Basilisk中event的继承顺序，修改部分笔误
+3.02版本更新确认了Basilisk中event的继承顺序，修改部分笔误\par
+4.02版本重新确认并更正了此前在理论部分出现的重大错误，并借由此从更深刻的角度重新理解相关求解器
 
 \end{abstract}
 
@@ -29,35 +29,35 @@
 \section{理论背景}
 
 \subsection{文件目的}
-本文件的目的是求解不可压NS方程，文件相关离散格式可以在相关文件中找到\cite{popinet2003gerris}\cite{popinet_accurate_2009}：
+本文件的目的是求解不可压$NS$方程，文件相关离散格式请见\cite{popinet2003gerris}\cite{popinet_accurate_2009}：
 \begin{gather}\label{equ:bukeyans}
     \frac{\partial \mathbf{u}}{\partial t}+\nabla\cdot(\mathbf{u}\otimes\mathbf{u})= \frac{1}{\rho}[-\nabla p+\nabla\cdot(2\mu\mathbf{D})]+\mathbf{a}\\
-    \nabla \mathbf{u} = 0
+    \nabla \cdot\mathbf{u} = 0
 \end{gather}
 
-\subsection{理论背景综述}
-centered.h大体上使用Fractional Step Method方法对不可压NS方程进行求解\cite{kim1985application}（注意是大体上，因为其并没有严格按照FSM进行求解器构建，但确实借用其思想）\par
-首先对原方程\ref{equ:bukeyans}进行离散有：
+\subsection{理论求解综述}
+本求解器使用$Approximate \,Projection \,Method$(下称$APM$)对不可压缩$NS$方程进行求解:\par
+对原方程\ref{equ:bukeyans}进行离散有：
 \begin{equation}\label{equ:discretization}
         \begin{aligned}
-        \rho_{n+\frac{1}{2}}\frac{\mathbf{u}^{n+1} - \mathbf{u}^{n}}{\Delta t}+\nabla\cdot(\mathbf{u}^{n+\frac{1}{2}}\otimes\mathbf{u}^{n+\frac{1}{2}})=  \nabla \cdot [\mu^{n+\frac{1}{2}}(\mathbf{D^{n+1}}+\mathbf{D^n})]+ [\mathbf{a}^{n+\frac{1}{2}}-\nabla p^{n+\frac{1}{2}}]
+        \rho^{n+\frac{1}{2}}\frac{\mathbf{u}^{n+1} - \mathbf{u}^{n}}{\Delta t}+\nabla\cdot(\mathbf{u}^{n+\frac{1}{2}}\otimes\mathbf{u}^{n+\frac{1}{2}})=  \nabla \cdot [\mu^{n+\frac{1}{2}}(\mathbf{D^{n+1}}+\mathbf{D^n})]+ [\mathbf{a}^{n+1}-\nabla p^{n+1}]
     \end{aligned}
 \end{equation}
-其中$\mathbf{u}^{n+1},\mathbf{u}^{n}$满足无散条件。\par
-在式\ref{equ:discretization}中我们已知$\mathbf{u}^n,\nabla p^{n-\frac{1}{2}}$而需要求解$\mathbf{u}^{n+1},\nabla p^{n+\frac{1}{2}}$。\par
-对上式方程进行更改后得到：
+理论上$\mathbf{u}^{n+1},\mathbf{u}^{n}$满足无散条件;
+式\ref{equ:discretization}中已知条件为$\mathbf{u}^n,\nabla p^{n}$而待解项为$\mathbf{u}^{n+1},\nabla p^{n+1}$。\par
+与$MAC$相似\cite{harlow1965numerical}，该方法的第一步都为计算不满足无散条件的中间步$ \mathbf{u} ^*$：
 \begin{equation}\label{yucebu}
-    \rho_{n+\frac{1}{2}}\frac{\mathbf{u}^* - \mathbf{u}^{n}}{\Delta t}+\nabla\cdot(\mathbf{u}^{n+\frac{1}{2}}\otimes\mathbf{u}^{n+\frac{1}{2}})= \nabla \cdot [2\mu^{n+\frac{1}{2}}\mathbf{D^*}]+[\mathbf{a}^{n-\frac{1}{2}}-\nabla p^{n-\frac{1}{2}}]
+    \rho^{n+\frac{1}{2}}\frac{\mathbf{u}^* - \mathbf{u}^{n}}{\Delta t}+\nabla\cdot(\mathbf{u}^{n+\frac{1}{2}}\otimes\mathbf{u}^{n+\frac{1}{2}})= \nabla \cdot [2\mu^{n+\frac{1}{2}}\mathbf{D^*}]+ \mathbf{a}^{n}-\nabla p^{n}
 \end{equation}
-注意$\mathbf{u^*}$并不需要满足无散条件，而此时方程中的加速项与压力梯度项均变为$n-\frac{1}{2}$时层值。我们称$\mathbf{u^*}$为速度预测步，用式\ref{equ:discretization}减去\ref{yucebu}，忽略扩散项的差异可以得到：
+注意$\mathbf{u^*}$并不需要满足无散条件。此处求解器选择$APM$的$pressure\, form$\cite{drikakis2005high}，即在相应的投影之前需要对$ \mathbf{u} ^*$进行相应的处理
 \begin{equation}\label{equ:poisson}
-        \mathbf{u^{n+1}} = \mathbf{u^*}+\frac{\Delta t}{\rho_{n+\frac{1}{2}}}(\nabla p^{n-\frac{1}{2}}-\nabla p^{n+\frac{1}{2}}-\mathbf{a}^{n-\frac{1}{2}}+\mathbf{a}^{n+\frac{1}{2}})
+    \mathbf{u}^{n+1} = \mathscr{P}( \mathbf{u}^* + \frac{\Delta t}{\rho^{n+\frac{1}{2}}}( -\mathbf{a}^{n} + p^{n}))
 \end{equation}
-可以看到预测步与$n+1$时层速度之间修补加速度项后满足投影法；两式中扩散项之差作为改方法在时间上的误差记$\epsilon$有
+其中$\mathscr{P}$代表投影算子；两式中扩散项之差作为改方法在时间上的误差记$\epsilon$有
 \begin{equation}
-        \epsilon = (\Delta t)^2\mathbf{L}(\frac{1}{\rho}\mathbf{G}(\frac{\partial p}{\partial t}))+\frac{1}{2}\Delta t\mathbf{L(\frac{\partial \mathbf{u}}{\partial t})}
+    \epsilon = (\Delta t)^2\mathscr{L}(\frac{1}{\rho}\mathscr{G}(\frac{\partial p}{\partial t}))+\frac{1}{2}\Delta t\mathscr{L}(\frac{\partial \mathbf{u}}{\partial t})
 \end{equation}
-$\mathbf{L},\mathbf{G}$分别是拉普拉斯与梯度算子。\par
+$\mathscr{L},\mathscr{G}$分别是拉普拉斯与梯度算子。\par
 \textbf{接下来依顺序求解方程\ref{yucebu}}\par
 首先启用bcg.h处理对流项，bcg.h得目的为求解方程：
 \begin{equation}\label{equ:duiliu}
@@ -65,7 +65,7 @@ $\mathbf{L},\mathbf{G}$分别是拉普拉斯与梯度算子。\par
 \end{equation}
 其中$\mathbf{A}$就是$\nabla\cdot(\mathbf{u}^{n+\frac{1}{2}}\otimes\mathbf{u}^{n+\frac{1}{2}})$的bcg离散格式，由此我们就可以将对流项加入到非定常项中，\ref{yucebu}变为：
 \begin{equation}\label{equ:vis}
-    \rho_{n+\frac{1}{2}}\frac{\mathbf{u}^* - \mathbf{u}^{**}}{\Delta t}= \nabla \cdot [2\mu^{n+\frac{1}{2}}\mathbf{D^*}]+[\mathbf{a}^{n-\frac{1}{2}}-\nabla p^{n-\frac{1}{2}}]
+    \rho_{n+\frac{1}{2}}\frac{\mathbf{u}^* - \mathbf{u}^{**}}{\Delta t}= \nabla \cdot [2\mu^{n+\frac{1}{2}}\mathbf{D^*}]+[\mathbf{a}^{n}-\nabla p^{n}]
 \end{equation}
 再将非扩散项的源项汇入非定常项，最后得到
 \begin{equation}\label{equ:kuosan}
@@ -73,17 +73,37 @@ $\mathbf{L},\mathbf{G}$分别是拉普拉斯与梯度算子。\par
 \end{equation}
 其中
 \begin{equation}\label{equ:yuanxiangjiazai}
-    \mathbf{u}^{***} = u^{**}+\frac{\Delta t}{\rho_{n+\frac{1}{2}}}[\mathbf{a}^{n-\frac{1}{2}}-\nabla p^{n-\frac{1}{2}}]
+    \mathbf{u}^{***} = u^{**}+\frac{\Delta t}{\rho_{n+\frac{1}{2}}}[\mathbf{a}^{n}-\nabla p^{n}]
 \end{equation}
-由viscosity.h求解该方程，得到$\mathbf{u^*}$。由方程\ref{equ:poisson}我们填补加速项与已知压力梯度项$\nabla p^{n-\frac{1}{2}}$可以得到
+由viscosity.h求解该方程，得到$\mathbf{u^*}$。再由方程\ref{equ:poisson}填补加速项与已知压力梯度项$\nabla p^{n}$得$u^*_{new}$
 \begin{equation}\label{equ:sudugengxin}
-    \mathbf{u^*_{new}}=\mathbf{u^*}-\frac{\Delta t}{\rho_{n+\frac{1}{2}}}(\nabla p^{n-\frac{1}{2}}-\mathbf{a^{n-\frac{1}{2}}}+\mathbf{a^{n+\frac{1}{2}}}) = \mathbf{u}^{n+1} + \nabla p^{n+ \frac{1}{2}}
+    \mathbf{u^*_{new}}=\mathbf{u^*}-\frac{\Delta t}{\rho_{n+\frac{1}{2}}}(-\nabla p^{n}+\mathbf{a^{n}}-\mathbf{a^{n+1}}) = \mathbf{u}^{n+1} + \nabla p^{n+ 1}
 \end{equation}
 又因为$\mathbf{u}^{n+1}$满足无散条件，即可得到poisson方程
 \begin{equation}
-     \nabla\mathbf{u^*_{new}}=\Delta p^{n+\frac{1}{2}}
+     \nabla\mathbf{u^*_{new}}=\Delta p^{n+1}
 \end{equation}
-由此更新速度$\mathbf{u}^{n+1}$以及速度梯度项$\nabla p^{n+\frac{1}{2}}$
+由此更新速度$\mathbf{u}^{n+1}$以及速度梯度项$\nabla p^{n+1}$
+
+\subsection{$APM$与$EPM$}
+如前文所述，本求解器算法为近似投影法($APM$)而并非标准投影法($EPM$)，二者主要区别在与对拉普拉斯算子$\mathscr{L}$的构造以及最后结果是否满足无散条件。将\ref{equ:bukeyans}改写为(忽略加速度项)：
+\begin{equation}
+    \frac{\partial \mathbf{u}}{\partial t}+\frac{1}{\rho}\nabla p= \frac{1}{\rho}[\nabla\cdot(2\mu\mathbf{D})]-\nabla\cdot(\mathbf{u}\otimes\mathbf{u})
+\end{equation}
+观察到方程右端为连续向量场，依照定义对其施加投影算子$\mathscr{P}$有
+\begin{equation}
+    \frac{\partial \mathbf{u}}{\partial t}=\mathscr{P} (\frac{1}{\rho}[\nabla\cdot(2\mu\mathbf{D})]-\nabla\cdot(\mathbf{u}\otimes\mathbf{u}))
+\end{equation}
+使用分布法实现该投影算子，即求解方程\ref{equ:discretization}首先得到$\mathbf{u}^*$，再通过$possion$求解器更新速度项与压力梯度项，即：
+\begin{equation}\label{equ:renew}
+    \mathscr{D}\mathscr{G}\phi =\mathscr{L} \phi= \mathscr{D}\mathbf{V}
+\end{equation}
+其中$\mathscr{D},\mathscr{G},\mathscr{L}$分别代表散度算子，梯度算子，拉普拉斯算子。$EPM$与$APM$之间的差别就在于$\mathscr{L}$的构建，对于$EPM$，$\mathscr{L}_{EPM}= \mathscr{D} \mathscr{G}$即拉普拉斯算子并不单独存在而是由两离散的算子计算合成的，然而这样构成的拉普拉斯算子在实际的操作尤其是自适应网格等复杂网格中很难实现，是故诞生了$APM$，即单独定义标准的$\mathscr{L}$，而往往$\mathscr{L}_{APM}\neq \mathscr{D} \mathscr{G}$，从而导致计算结果$ \mathbf{u}^{n+1}$并不能满足严格的无散条件，而是对标准无散速度的二阶近似，近似投影法$APM$也因此得名。\par
+$\phi, \mathbf{V}$则分别代表余项以及相应的无散化矢量，根据不同需要$ \mathbf{V}$有不同选择\cite{almgren2000approximate}，在$EPM$中$ \mathbf{V}$的选择并不影响最终结果，然而对于$APM$，$ \mathbf{V}$的选择会极大的影响最终的误差积累。本求解器在此处选取的形式为
+\begin{equation}
+    \mathbf{V} = \mathbf{u}^* + \frac{\Delta t}{\rho^{n + \frac{1}{2}}}(\nabla p^n) 
+\end{equation}
+根据\cite{almgren2000approximate}，此种模式在$APM$中相较其他选择具有最强的稳定性。
 \section{源代码解析}
 \subsection{代码构成及结构简介}
 同上文原理，代码共有五部分：
@@ -555,7 +575,7 @@ event acceleration (i++) {
 基于官网$Basilisk C$ \url{http://basilisk.fr/Basilisk%20C#event-inheritance}中的相关介绍以及代码实验，现对Basilisk中同名event的继承执行顺序进行概述\par
 \begin{enumerate}
     \item 程序进行编译运行时所有的头文件将会被直接复制打开，所有同名的event视为一组(group)将会被同时执行，其相较于其他名称event被执行顺序取决于该组event中最先出现的那一个的位置
-    \item 组内event的执行顺序和出现顺序\textcolor{相反}，即最先执行在源程序中出现最晚的event
+    \item 组内event的执行顺序和出现顺序\textcolor{red}{相反}，即最先执行在源程序中出现最晚的event
 \end{enumerate}
 为了测试event执行顺序编写以下主程序及头文件\par
 主程序示例：

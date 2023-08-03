@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 JUL 2023 14:40
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 AUG 2023 21:35
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1375,28 +1375,28 @@ Package: xeCJK-listings 2020/02/14 v3.8.1 xeCJK patch file for listings
  (./centered.aux)
 \openout1 = `centered.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 \AtBeginShipoutBox=\box137
-Package hyperref Info: Link coloring ON on input line 16.
+Package hyperref Info: Link coloring ON on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1406,15 +1406,13 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count526
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
+ (./centered.out) (./centered.out)
 \@outlinefile=\write7
 \openout7 = `centered.out'.
 
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1456,7 +1454,7 @@ Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 16.
+LaTeX Info: Redefining \selectfont on input line 15.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -1469,12 +1467,14 @@ Package biblatex Info: Automatic encoding selection.
 \openout6 = `centered.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'centered.bbl' not found.
-
-No file centered.bbl.
-Package biblatex Info: Reference section=0 on input line 16.
-Package biblatex Info: Reference segment=0 on input line 16.
-(/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
+Package biblatex Info: ... file 'centered.bbl' found.
+ (./centered.bbl
+LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
+(Font)              scaled to size 9.0pt on input line 60.
+)
+Package biblatex Info: Reference section=0 on input line 15.
+Package biblatex Info: Reference segment=0 on input line 15.
+ (/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
 \FN@temptoken=\toks50
 \footnotemargin=\dimen371
@@ -1488,95 +1488,63 @@ Package footmisc Info: Declaring symbol style lamport*-robust on input line 924.
 )
 \c@lstlisting=\count528
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 18.
+(Font)              scaled to size 12.0pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 18.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
+(Font)              scaled to size 10.0pt on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 18.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 19.
+(Font)              scaled to size 9.85492pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
+ (./centered.toc
+LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
+(Font)              scaled to size 10.0pt on input line 3.
+LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
+(Font)              scaled to size 8.99994pt on input line 3.
+)
 \tf@toc=\write8
 \openout8 = `centered.toc'.
 
-LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.0pt on input line 21.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
 (Font)              scaled to size 9.85492pt on input line 31.
-
-
-LaTeX Warning: Citation 'popinet2003gerris' on page 1 undefined on input line 32.
-
-LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 32.
-
-LaTeX Warning: Citation 'popinet_accurate_2009' on page 1 undefined on input line 32.
-
-
-Overfull \hbox (154.56993pt too wide) in paragraph at lines 32--33
-[]\TU/FandolSong-Regular(0)/m/n/10.95 本 文 件 的 目 的 是 求 解 不 可 压 \TU/texgyretermes(0)/m/n/10.95 NS \TU/FandolSong-Regular(0)/m/n/10.95 方 程，|  文 件 相 关 离 散 格 式 可 以 在 相 关 文 件 中 找 到 \TU/texgyretermes(0)/m/n/10.95 [[]][[]]\TU/FandolSong-Regular(0)/m/n/10.95 ：| 
- []
-
-
-LaTeX Warning: Citation 'kim1985application' on page 1 undefined on input line 39.
-
-
-Overfull \hbox (26.46852pt too wide) in paragraph at lines 39--39
-[]\TU/texgyretermes(0)/m/n/10.95 centered.h \TU/FandolSong-Regular(0)/m/n/10.95 大 体 上 使 用 \TU/texgyretermes(0)/m/n/10.95 Fractional Step Method \TU/FandolSong-Regular(0)/m/n/10.95 方 法 对 不 可 压 \TU/texgyretermes(0)/m/n/10.95 NS \TU/FandolSong-Regular(0)/m/n/10.95 方 程 进 行 求 解 \TU/texgyretermes(0)/m/n/10.95 [[]]
- []
-
-
-LaTeX Warning: Reference `equ:bukeyans' on page 1 undefined on input line 40.
-
-
-LaTeX Warning: Reference `equ:discretization' on page 1 undefined on input line 47.
-
-
-LaTeX Warning: Reference `equ:discretization' on page 1 undefined on input line 52.
-
-
-LaTeX Warning: Reference `yucebu' on page 1 undefined on input line 52.
-
-[1
+ [1
 
 ]
+LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
+(Font)              scaled to size 10.95pt on input line 61.
+ [2]
 
-LaTeX Warning: Reference `yucebu' on page 2 undefined on input line 61.
-
-
-LaTeX Warning: Reference `yucebu' on page 2 undefined on input line 66.
-
-
-LaTeX Warning: Reference `equ:poisson' on page 2 undefined on input line 78.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
 
 
-LaTeX Warning: Reference `sec:fundemantel' on page 2 undefined on input line 91.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
 
 
-LaTeX Warning: Reference `sec:advection' on page 2 undefined on input line 92.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
 
 
-LaTeX Warning: Reference `sec:diffusion' on page 2 undefined on input line 93.
-
-
-LaTeX Warning: Reference `sec:projection' on page 2 undefined on input line 94.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 88.
 
 File: centered.h.png Graphic file (type bmp)
 <centered.h.png>
@@ -1585,15 +1553,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 \openout3 = `centered.pyg'.
 
-runsystem(pygmentize -S default -f latex -P commandprefix=PYG > _minted-centered/default-pyg-prefix.pygstyle)...executed.
-
-(./_minted-centered/default-pyg-prefix.pygstyle)
-runsystem(pygmentize -S default -f latex -P commandprefix=PYGdefault > _minted-centered/default.pygstyle)...executed.
-
- (./_minted-centered/default.pygstyle)
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/91889994D300DB3C50CCE9B0CF899F130F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
-
- (./_minted-centered/91889994D300DB3C50CCE9B0CF899F130F1FE6FB436295F30DDBEFA961EB67E8.pygtex
+(./_minted-centered/default-pyg-prefix.pygstyle) (./_minted-centered/default.pygstyle) (./_minted-centered/91889994D300DB3C50CCE9B0CF899F130F1FE6FB436295F30DDBEFA961EB67E8.pygtex
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
 (Font)              scaled to size 6.0pt on input line 2.
 
@@ -1605,209 +1565,138 @@ LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
 (Font)              scaled to size 10.95pt on input line 11.
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `TU/lmtt/b/n' tried instead on input line 18.
-) [2]
-Underfull \vbox (badness 10000) detected at line 318
+) [3]
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 318
- []
-
-[3]
-Underfull \vbox (badness 10000) detected at line 318
- []
-
-
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 [4]
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 [5]
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 [6]
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 [7]
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 318
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 [8]
-
-LaTeX Warning: Reference `equ:duiliu' on page 9 undefined on input line 320.
-
-\openout3 = `centered.pyg'.
-
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/A1BAD0D1F3B5AF109C93936A76966D290F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
-
-(./_minted-centered/A1BAD0D1F3B5AF109C93936A76966D290F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [9]
-Underfull \vbox (badness 10000) detected at line 390
+Underfull \vbox (badness 10000) detected at line 338
  []
 
 
-Underfull \vbox (badness 10000) detected at line 390
+Underfull \vbox (badness 10000) detected at line 338
  []
 
-[10]
-
-LaTeX Warning: Reference `equ:yuanxiangjiazai' on page 11 undefined on input line 393.
-
+[9]
 \openout3 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/ED4CB0FE7A05AFF60E20E53E758635C80F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
+ (./_minted-centered/A1BAD0D1F3B5AF109C93936A76966D290F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [10]
+Underfull \vbox (badness 10000) detected at line 410
+ []
 
-(./_minted-centered/ED4CB0FE7A05AFF60E20E53E758635C80F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [11]
+
+Underfull \vbox (badness 10000) detected at line 410
+ []
+
+[11]
+\openout3 = `centered.pyg'.
+
+ (./_minted-centered/ED4CB0FE7A05AFF60E20E53E758635C80F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [12]
 \openout5 = `centered.pyg'.
-
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/25D0244CD2F4B33D9AF2DECDB68799A66A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
 
  (./_minted-centered/25D0244CD2F4B33D9AF2DECDB68799A66A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
-
-LaTeX Warning: Reference `equ:kuosan' on page 12 undefined on input line 437.
-
 \openout5 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/624C4641CB3340E20A58E1B41845362A6A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
-
-(./_minted-centered/624C4641CB3340E20A58E1B41845362A6A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
-
-LaTeX Warning: Reference `equ:sudugengxin' on page 12 undefined on input line 441.
-
-
-LaTeX Warning: Reference `sec:fuluA' on page 12 undefined on input line 441.
-
+ (./_minted-centered/624C4641CB3340E20A58E1B41845362A6A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
 \openout3 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/617C21A4542D8A098E6DDFA4BB8FCE4E0F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
-
-(./_minted-centered/617C21A4542D8A098E6DDFA4BB8FCE4E0F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [12]
-Underfull \vbox (badness 10000) detected at line 541
+ (./_minted-centered/617C21A4542D8A098E6DDFA4BB8FCE4E0F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [13]
+Underfull \vbox (badness 10000) detected at line 561
  []
 
 
-Underfull \vbox (badness 10000) detected at line 541
- []
-
-[13]
-Underfull \vbox (badness 10000) detected at line 541
- []
-
-
-Underfull \vbox (badness 10000) detected at line 541
+Underfull \vbox (badness 10000) detected at line 561
  []
 
 [14]
-\openout3 = `centered.pyg'.
-
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/3208B4EE015F08A6322179FD80FB7F750F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
-
- (./_minted-centered/3208B4EE015F08A6322179FD80FB7F750F1FE6FB436295F30DDBEFA961EB67E8.pygtex)
-Overfull \hbox (2.71628pt too wide) in paragraph at lines 557--558
-[]\TU/FandolSong-Regular(0)/m/n/10.95 程 序 进 行 编 译 运 行 时 所 有 的 头 文 件 将 会 被 直 接 复 制 打 开，|  所 有 同 名 的 \TU/texgyretermes(0)/m/n/10.95 event \TU/FandolSong-Regular(0)/m/n/10.95 视 为 一 组 \TU/texgyretermes(0)/m/n/10.95 (group)
+Underfull \vbox (badness 10000) detected at line 561
  []
 
 
-./centered.tex:558: Package xcolor Error: Undefined color `相反'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.558     \item 组内event的执行顺序和出现顺序\textcolor{相反}，
-                                                即最先执行在源程序中出现最晚的event
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+Underfull \vbox (badness 10000) detected at line 561
+ []
 
 [15]
 \openout3 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/13D2071C3962BE62CC02A4EA394461C30F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
+ (./_minted-centered/3208B4EE015F08A6322179FD80FB7F750F1FE6FB436295F30DDBEFA961EB67E8.pygtex)
+Overfull \hbox (2.71628pt too wide) in paragraph at lines 577--578
+[]\TU/FandolSong-Regular(0)/m/n/10.95 程 序 进 行 编 译 运 行 时 所 有 的 头 文 件 将 会 被 直 接 复 制 打 开，|  所 有 同 名 的 \TU/texgyretermes(0)/m/n/10.95 event \TU/FandolSong-Regular(0)/m/n/10.95 视 为 一 组 \TU/texgyretermes(0)/m/n/10.95 (group)
+ []
+
+[16]
+\openout3 = `centered.pyg'.
 
  (./_minted-centered/13D2071C3962BE62CC02A4EA394461C30F1FE6FB436295F30DDBEFA961EB67E8.pygtex)
 \openout3 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -P mathescape=True -o _minted-centered/21E4A94383462BF4BE6E3AB2AE2169060F1FE6FB436295F30DDBEFA961EB67E8.pygtex centered.pyg)...executed.
-
- (./_minted-centered/21E4A94383462BF4BE6E3AB2AE2169060F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [16]
+ (./_minted-centered/21E4A94383462BF4BE6E3AB2AE2169060F1FE6FB436295F30DDBEFA961EB67E8.pygtex) [17]
 \openout5 = `centered.pyg'.
-
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/10F820544443F17E05213110A6C81B1A6A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
 
  (./_minted-centered/10F820544443F17E05213110A6C81B1A6A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
 \openout5 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/C439FC4E9F7CBF43A72BF66F71746CD96A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
-
  (./_minted-centered/C439FC4E9F7CBF43A72BF66F71746CD96A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
 \openout5 = `centered.pyg'.
-
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/F6C6A71758DF54ECBF8BF6ECA34D19866A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
 
  (./_minted-centered/F6C6A71758DF54ECBF8BF6ECA34D19866A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
 \openout5 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/4998D757F89F8311E19196782936F9256A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
-
  (./_minted-centered/4998D757F89F8311E19196782936F9256A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
 \openout5 = `centered.pyg'.
 
-runsystem(pygmentize -l lexer.py:DiffLexer -x -f latex -P commandprefix=PYG -F tokenmerge -P mathescape=True -o _minted-centered/60B725F10C9C85C70D97880DFE8191B36A9311D10CD9E3B41F08C1ABFAEFA628.pygtex centered.pyg)...executed.
-
  (./_minted-centered/60B725F10C9C85C70D97880DFE8191B36A9311D10CD9E3B41F08C1ABFAEFA628.pygtex)
-
-LaTeX Warning: Empty bibliography on input line 611.
-
-[17]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 612.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 612.
+LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
+(Font)              scaled to size 9.0pt on input line 631.
+ [18]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 632.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 632.
  (./centered.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 612.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 612.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 632.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 632.
+Package rerunfilecheck Info: File `centered.out' has not changed.
+(rerunfilecheck)             Checksum: 1A938A09039D34079A9C0FAE3C0F1744;1977.
 
-
-Package rerunfilecheck Warning: File `centered.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `centered.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  6F322B44DA418E4BC6E890DED338201F;1801.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 runsystem(rm centered.pyg)...executed.
-
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                centered
-(biblatex)                and rerun LaTeX afterwards.
 
 Package logreq Info: Writing requests to 'centered.run.xml'.
 \openout1 = `centered.run.xml'.
@@ -1815,15 +1704,15 @@ Package logreq Info: Writing requests to 'centered.run.xml'.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 18 (\begingroup)
+### semi simple group (level 1) entered at line 17 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 41134 strings out of 479819
- 841223 string characters out of 5895846
- 1620770 words of memory out of 5000000
- 57479 multiletter control sequences out of 15000+600000
- 543827 words of font info for 124 fonts, out of 8000000 for 9000
+ 41208 strings out of 479819
+ 844408 string characters out of 5895846
+ 1626109 words of memory out of 5000000
+ 57540 multiletter control sequences out of 15000+600000
+ 543867 words of font info for 129 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 68i,10n,84p,795b,1251s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,10n,84p,795b,4789s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on centered.xdv (17 pages, 220592 bytes).
+Output written on centered.xdv (18 pages, 283116 bytes).

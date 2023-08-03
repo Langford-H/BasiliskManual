@@ -2184,7 +2184,10 @@
   <bcf:section number="0">
     <bcf:citekey order="1">popinet2003gerris</bcf:citekey>
     <bcf:citekey order="2">popinet_accurate_2009</bcf:citekey>
-    <bcf:citekey order="3">kim1985application</bcf:citekey>
+    <bcf:citekey order="3">harlow1965numerical</bcf:citekey>
+    <bcf:citekey order="4">drikakis2005high</bcf:citekey>
+    <bcf:citekey order="5">almgren2000approximate</bcf:citekey>
+    <bcf:citekey order="6">almgren2000approximate</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

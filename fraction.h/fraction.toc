@@ -1,6 +1,6 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {1}文件中主要函数及目的}{2}{section.1}%
+\contentsline {section}{\numberline {1}文件中主要函数及目的}{1}{section.1}%
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2}fraction refine函数}{2}{section.2}%
 \defcounter {refsection}{0}\relax 
@@ -8,7 +8,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.2}代码实现}{2}{subsection.2.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3}fraction函数}{5}{section.3}%
+\contentsline {section}{\numberline {3}fraction函数}{6}{section.3}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1}理论原理}{6}{subsection.3.1}%
 \defcounter {refsection}{0}\relax 

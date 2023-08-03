@@ -1,0 +1,184 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{almgren2000approximate}{article}{}
+      \name{author}{3}{}{%
+        {{hash=fd4a309fce1ec04f57f1ff13f34f0f89}{%
+           family={Almgren},
+           familyi={A\bibinitperiod},
+           given={Ann\bibnamedelima S},
+           giveni={A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=d10a079953d9591d44e42c28b8a87f11}{%
+           family={Bell},
+           familyi={B\bibinitperiod},
+           given={John\bibnamedelima B},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=adc1817f85ec40494645e44464ec7b89}{%
+           family={Crutchfield},
+           familyi={C\bibinitperiod},
+           given={William\bibnamedelima Y},
+           giveni={W\bibinitperiod\bibinitdelim Y\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {SIAM}%
+      }
+      \strng{namehash}{22aec06d89a4939de1530849eb139275}
+      \strng{fullhash}{22aec06d89a4939de1530849eb139275}
+      \strng{bibnamehash}{22aec06d89a4939de1530849eb139275}
+      \strng{authorbibnamehash}{22aec06d89a4939de1530849eb139275}
+      \strng{authornamehash}{22aec06d89a4939de1530849eb139275}
+      \strng{authorfullhash}{22aec06d89a4939de1530849eb139275}
+      \field{sortinit}{A}
+      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{SIAM Journal on Scientific Computing}
+      \field{number}{4}
+      \field{title}{Approximate projection methods: Part I. Inviscid analysis}
+      \field{volume}{22}
+      \field{year}{2000}
+      \field{pages}{1139\bibrangedash 1159}
+      \range{pages}{21}
+    \endentry
+    \entry{drikakis2005high}{book}{}
+      \name{author}{2}{}{%
+        {{hash=67d7db7053642cc1830e3b2630400eea}{%
+           family={Drikakis},
+           familyi={D\bibinitperiod},
+           given={Dimitris},
+           giveni={D\bibinitperiod}}}%
+        {{hash=d02e1ba90415e35846ac7f2c814efa1e}{%
+           family={Rider},
+           familyi={R\bibinitperiod},
+           given={William},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer Science \& Business Media}%
+      }
+      \strng{namehash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \strng{fullhash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \strng{bibnamehash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \strng{authorbibnamehash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \strng{authornamehash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \strng{authorfullhash}{2eb408d9adc8869725c5f3b6d5325e96}
+      \field{sortinit}{D}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{High-resolution methods for incompressible and low-speed flows}
+      \field{year}{2005}
+    \endentry
+    \entry{harlow1965numerical}{article}{}
+      \name{author}{2}{}{%
+        {{hash=07c8ed043aabf7b0c3e5be65f9024601}{%
+           family={Harlow},
+           familyi={H\bibinitperiod},
+           given={Francis\bibnamedelima H},
+           giveni={F\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=14c36403aa21524af13c0cdf22c0be02}{%
+           family={Welch},
+           familyi={W\bibinitperiod},
+           given={J\bibnamedelima Eddie},
+           giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {American Institute of Physics}%
+      }
+      \strng{namehash}{8de29e45655d0ecdade019bcf8f61537}
+      \strng{fullhash}{8de29e45655d0ecdade019bcf8f61537}
+      \strng{bibnamehash}{8de29e45655d0ecdade019bcf8f61537}
+      \strng{authorbibnamehash}{8de29e45655d0ecdade019bcf8f61537}
+      \strng{authornamehash}{8de29e45655d0ecdade019bcf8f61537}
+      \strng{authorfullhash}{8de29e45655d0ecdade019bcf8f61537}
+      \field{sortinit}{H}
+      \field{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The physics of fluids}
+      \field{number}{12}
+      \field{title}{Numerical calculation of time-dependent viscous incompressible flow of fluid with free surface}
+      \field{volume}{8}
+      \field{year}{1965}
+      \field{pages}{2182\bibrangedash 2189}
+      \range{pages}{8}
+    \endentry
+    \entry{popinet_accurate_2009}{article}{}
+      \name{author}{1}{}{%
+        {{hash=33dd5ed435ec6d727e06c27776df80c2}{%
+           family={Popinet},
+           familyi={P\bibinitperiod},
+           given={Stéphane},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{fullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{bibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorbibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authornamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorfullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \field{extraname}{1}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Physics}
+      \field{number}{16}
+      \field{title}{An accurate adaptive solver for surface-tension-driven interfacial flows}
+      \field{volume}{228}
+      \field{year}{2009}
+      \field{pages}{5838\bibrangedash 5866}
+      \range{pages}{29}
+    \endentry
+    \entry{popinet2003gerris}{article}{}
+      \name{author}{1}{}{%
+        {{hash=33dd5ed435ec6d727e06c27776df80c2}{%
+           family={Popinet},
+           familyi={P\bibinitperiod},
+           given={St{é}phane},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{fullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{bibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorbibnamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authornamehash}{33dd5ed435ec6d727e06c27776df80c2}
+      \strng{authorfullhash}{33dd5ed435ec6d727e06c27776df80c2}
+      \field{extraname}{2}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of computational physics}
+      \field{number}{2}
+      \field{title}{Gerris: a tree-based adaptive solver for the incompressible Euler equations in complex geometries}
+      \field{volume}{190}
+      \field{year}{2003}
+      \field{pages}{572\bibrangedash 600}
+      \range{pages}{29}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

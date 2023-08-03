@@ -1,4 +1,4 @@
-PWD /data/codelib/tex/basilisk man/poission.h文档说明
+PWD /data/codelib/tex/basilisk man/poission.h
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 JUL 2023 14:58
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2023.5.31)  3 AUG 2023 21:50
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1375,28 +1375,28 @@ Package: xeCJK-listings 2020/02/14 v3.8.1 xeCJK patch file for listings
  (./poission.aux)
 \openout1 = `poission.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 \AtBeginShipoutBox=\box137
-Package hyperref Info: Link coloring ON on input line 16.
+Package hyperref Info: Link coloring ON on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1406,9 +1406,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count526
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
  (./poission.out) (./poission.out)
 \@outlinefile=\write7
 \openout7 = `poission.out'.
@@ -1454,7 +1454,7 @@ Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 16.
+LaTeX Info: Redefining \selectfont on input line 15.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -1472,8 +1472,8 @@ Package biblatex Info: ... file 'poission.bbl' found.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
 (Font)              scaled to size 9.0pt on input line 50.
 )
-Package biblatex Info: Reference section=0 on input line 16.
-Package biblatex Info: Reference segment=0 on input line 16.
+Package biblatex Info: Reference section=0 on input line 15.
+Package biblatex Info: Reference segment=0 on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
 Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
 \FN@temptoken=\toks50
@@ -1488,31 +1488,31 @@ Package footmisc Info: Declaring symbol style lamport*-robust on input line 924.
 )
 \c@lstlisting=\count528
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 17.28pt on input line 18.
+(Font)              scaled to size 17.28pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 18.
+(Font)              scaled to size 12.0pt on input line 17.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 18.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
+(Font)              scaled to size 10.0pt on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 18.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 17.
  (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 9.85492pt on input line 19.
+(Font)              scaled to size 9.85492pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
 LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 10.79993pt on input line 19.
+(Font)              scaled to size 10.79993pt on input line 18.
  (./poission.toc
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
 (Font)              scaled to size 10.0pt on input line 3.
@@ -1522,18 +1522,17 @@ LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
 \tf@toc=\write8
 \openout8 = `poission.toc'.
 
+LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
+(Font)              scaled to size 9.85492pt on input line 29.
  [1
 
-]
-LaTeX Font Info:    Font shape `TU/texgyreheros(0)/b/n' will be
-(Font)              scaled to size 9.85492pt on input line 30.
- [2]
+] [2]
 File: wangge.png Graphic file (type bmp)
 <wangge.png>
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 88.
+(Font)              scaled to size 10.95pt on input line 87.
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
-(Font)              scaled to size 10.95pt on input line 117.
+(Font)              scaled to size 10.95pt on input line 116.
  [3]
 File: poisson.png Graphic file (type bmp)
 <poisson.png>
@@ -1554,11 +1553,11 @@ LaTeX Font Warning: Font shape `TU/FandolFang-Regular(0)/m/it' undefined
 (Font)              using `TU/FandolFang-Regular(0)/m/n' instead on input line 8.
 
 ) [4]
-Underfull \vbox (badness 10000) detected at line 183
+Underfull \vbox (badness 10000) detected at line 182
  []
 
 
-Overfull \vbox (18.40556pt too high) detected at line 183
+Overfull \vbox (18.40556pt too high) detected at line 182
  []
 
 [5]
@@ -1571,15 +1570,15 @@ Overfull \vbox (18.40556pt too high) detected at line 183
 \openout3 = `poission.pyg'.
 
  (./_minted-poission/61940C8CF0A5BE3C21245549F068F4402F228391408C98AFFD630B50AA848FEC.pygtex)
-Overfull \vbox (16.97552pt too high) detected at line 303
+Overfull \vbox (16.97552pt too high) detected at line 302
  []
 
 [7]
-Underfull \vbox (badness 10000) detected at line 303
+Underfull \vbox (badness 10000) detected at line 302
  []
 
 
-Overfull \vbox (8.17552pt too high) detected at line 303
+Overfull \vbox (8.17552pt too high) detected at line 302
  []
 
 [8] [9]
@@ -1589,15 +1588,15 @@ Overfull \vbox (8.17552pt too high) detected at line 303
 \openout3 = `poission.pyg'.
 
  (./_minted-poission/15A60C76A5B0A9F24DD496CB66033D8F2F228391408C98AFFD630B50AA848FEC.pygtex)
-Overfull \vbox (3.01561pt too high) detected at line 384
+Overfull \vbox (3.01561pt too high) detected at line 383
  []
 
 [10]
-Underfull \vbox (badness 10000) detected at line 384
+Underfull \vbox (badness 10000) detected at line 383
  []
 
 
-Underfull \vbox (badness 10000) detected at line 384
+Underfull \vbox (badness 10000) detected at line 383
  []
 
 [11]
@@ -1607,18 +1606,18 @@ Underfull \vbox (badness 10000) detected at line 384
 \openout3 = `poission.pyg'.
 
  (./_minted-poission/729C3F2ED3C3F9B6400002550B24BC182F228391408C98AFFD630B50AA848FEC.pygtex)
-Overfull \vbox (4.23404pt too high) detected at line 480
+Overfull \vbox (4.23404pt too high) detected at line 479
  []
 
 [13]
 \openout3 = `poission.pyg'.
 
  [14] (./_minted-poission/9A073A4C6F8327865DFA75AD52FCDECA2F228391408C98AFFD630B50AA848FEC.pygtex)
-Underfull \vbox (badness 10000) detected at line 528
+Underfull \vbox (badness 10000) detected at line 527
  []
 
 
-Underfull \vbox (badness 10000) detected at line 528
+Underfull \vbox (badness 10000) detected at line 527
  []
 
 [15]
@@ -1626,13 +1625,13 @@ File: bilinear.png Graphic file (type bmp)
 <bilinear.png>
  [16]
 LaTeX Font Info:    Font shape `TU/texgyretermes(0)/m/it' will be
-(Font)              scaled to size 9.0pt on input line 559.
+(Font)              scaled to size 9.0pt on input line 558.
  [17]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 560.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 560.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 559.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 559.
  (./poission.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 560.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 560.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 559.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 559.
 Package rerunfilecheck Info: File `poission.out' has not changed.
 (rerunfilecheck)             Checksum: 1EC04263513D8F9E240522049AACA27E;1860.
 
@@ -1647,15 +1646,15 @@ Package logreq Info: Writing requests to 'poission.run.xml'.
  )
 (\end occurred inside a group at level 1)
 
-### semi simple group (level 1) entered at line 18 (\begingroup)
+### semi simple group (level 1) entered at line 17 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
  41222 strings out of 479819
  842138 string characters out of 5895846
- 1597336 words of memory out of 5000000
+ 1597323 words of memory out of 5000000
  57566 multiletter control sequences out of 15000+600000
  543875 words of font info for 130 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  68i,15n,84p,795b,4807s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on poission.xdv (17 pages, 261772 bytes).
+Output written on poission.xdv (17 pages, 261752 bytes).
